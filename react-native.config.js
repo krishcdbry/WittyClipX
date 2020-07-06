@@ -6,6 +6,7 @@ module.exports = {
           sourceDir: '../node_modules/react-native-video/android-exoplayer',
         },
       },
-    },
+    },// stays the same
   },
+  assets: ["./assets/fonts/"], 
 };
