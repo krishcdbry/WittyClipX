@@ -13,45 +13,55 @@ import {
 import Video, { FilterType } from "react-native-video";
 import Swiper from "react-native-swiper";
 
+import DeviceInfo from "react-native-device-info";
+
 import icon from "../../../../assets/images/wittyclip.png";
+import thumb from "../../../../assets/images/thumb.jpg";
+import thumb1 from "../../../../assets/images/thumb1.jpg";
+import thumb2 from "../../../../assets/images/thumb2.jpg";
 
 const clip0 = require("../../../../assets/clips/splash0.mp4");
 const clip1 = require("../../../../assets/clips/splash1.mp4");
 const clip2 = require("../../../../assets/clips/splash2.mp4");
 const clip3 = require("../../../../assets/clips/splash3.mp4");
-const clip4 = require("../../../../assets/clips/splash4.mp4");
-const clip5 = require("../../../../assets/clips/splash5.mp4");
-const clip6 = require("../../../../assets/clips/splash6.mp4");
-const clip7 = require("../../../../assets/clips/splash7.mp4");
-const clip8 = require("../../../../assets/clips/splash8.mp4");
-const clip9 = require("../../../../assets/clips/splash9.mp4");
-const clip10 = require("../../../../assets/clips/splash10.mp4");
 
 const ScreenWidth = Dimensions.get("window").width;
 const ScreenHeight = Dimensions.get("window").height;
-
-const videos = [
-  clip0,
-  clip1,
-  clip2,
-  clip3,
-  clip4,
-  clip5,
-  clip6,
-  clip7,
-  clip8,
-  clip9,
-  clip10,
-];
+const videos = [clip0, clip1, clip2, clip3];
+const videosLength = videos.length;
 
 const LandingScreen = () => {
-  console.log("Loaded");
   const [activeVideo, setActiveVideo] = useState(0);
   const y_translate = new Animated.Value(0);
   const menu_moveY = y_translate.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -300],
   });
+
+  // Analytics
+  const AndroidId = DeviceInfo.getAndroidIdSync();
+  const Address = DeviceInfo.getIpAddressSync();
+  const BaseOs = DeviceInfo.getBaseOsSync();
+  const Brand = DeviceInfo.getBrand();
+  const BuildId = DeviceInfo.getBuildIdSync();
+  const DeviceId = DeviceInfo.getDeviceId();
+  const DeviceToken = DeviceInfo.getDeviceToken();
+  const InstallTime = DeviceInfo.getFirstInstallTimeSync();
+  const Manufacturer = DeviceInfo.getManufacturerSync();
+
+  const deviceData = {
+    AndroidId,
+    Address,
+    BaseOs,
+    Brand,
+    BuildId,
+    DeviceId,
+    DeviceToken,
+    InstallTime,
+    Manufacturer,
+  };
+
+  console.log(deviceData);
 
   const animate = (count = 0) => {
     Animated.sequence([
@@ -70,7 +80,7 @@ const LandingScreen = () => {
 
   const onIndexChanged = () => {
     let activeIndex = activeVideo + 1;
-    if (activeVideo === 10) {
+    if (activeVideo === videosLength - 1) {
       activeIndex = 0;
     }
     console.log(activeIndex);
@@ -110,12 +120,24 @@ const LandingScreen = () => {
           <Text style={styles.desc}>#Record</Text>
           <Text style={styles.desc}>#Play</Text>
         </View>
-        {/* <View style={styles.notif}>
-          <Text style={{ color: "#fff" }}>On the way</Text>
-        </View> */}
+        <View style={styles.notif}>
+          <Text style={{ color: "#fff", fontSize: 12 }}>On the way</Text>
+        </View>
+
+        <View style={styles.thumbs}>
+          <Image source={thumb} style={styles.thumbnail} />
+          <Image source={thumb1} style={styles.thumbnail} />
+          <Image source={thumb2} style={styles.thumbnail} />
+        </View>
+
         <TouchableHighlight style={styles.notifyContainer}>
-          <Text style={styles.notifyButtonText}> Notify Me ! </Text>
+          <Text style={styles.notifyButtonText}> Join Waitlist ! </Text>
         </TouchableHighlight>
+
+        <View style={styles.waitinglistCount}>
+          <Text style={styles.count}> 4.7k </Text>
+          <Text style={styles.countText}> Joined </Text>
+        </View>
       </View>
 
       <Swiper
@@ -123,7 +145,7 @@ const LandingScreen = () => {
         horizontal={false}
         showsPagination={false}
         autoplay={true}
-        autoplayTimeout={9}
+        autoplayTimeout={15}
         loadMinimal={true}
         onIndexChanged={onIndexChanged}
       >
@@ -136,7 +158,6 @@ const LandingScreen = () => {
               repeat={true}
               resizeMode={"cover"}
               rate={1}
-              volume={0.1}
               filter={FilterType.SEPIA}
               paused={activeVideo !== idx}
               ignoreSilentSwitch={"obey"}
@@ -154,16 +175,36 @@ const styles = StyleSheet.create({
     flex: 1,
     height: ScreenHeight,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   descContainer: {
     marginLeft: 20,
   },
   desc: {
     fontSize: 52,
-    color: '#fff',
+    color: "#fff",
     fontFamily: "Capriola-Regular",
-    fontWeight: '400',
+    fontWeight: "400",
+  },
+  thumbs: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 40,
+    marginTop: 30,
+  },
+  thumbnail: {
+    width: 38,
+    height: 38,
+    resizeMode: "cover",
+    borderRadius: 200,
+    margin: 0 - 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 12 },
+    shadowRadius: 10,
   },
   logoContainer: {
     width: 150,
@@ -178,12 +219,12 @@ const styles = StyleSheet.create({
   },
   notif: {
     position: "absolute",
-    top: 85,
-    right: 30,
+    top: 80,
+    right: 50,
     backgroundColor: "#EA3357",
     borderRadius: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 9,
+    paddingVertical: 3,
+    paddingHorizontal: 7,
     color: "#fff",
   },
   logo: {
@@ -201,7 +242,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginVertical: 15,
     fontFamily: "Capriola-Regular",
-    fontWeight: '400',
+    fontWeight: "400",
   },
   notifyContainer: {
     backgroundColor: "#1e88e5",
@@ -225,11 +266,11 @@ const styles = StyleSheet.create({
   notifyButtonText: {
     fontSize: 15,
     color: "#fff",
-    fontFamily: 'Capriola-Regular',
-    fontWeight: '400',
+    fontFamily: "Capriola-Regular",
+    fontWeight: "400",
   },
   view: {
-    backgroundColor: "rgba(0,0,0,0.8)",
+    backgroundColor: "rgba(0,0,0,0.65)",
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start",
@@ -248,6 +289,20 @@ const styles = StyleSheet.create({
   clip: {
     flex: 1,
     backgroundColor: "#000000",
+  },
+  waitinglistCount: {
+    marginTop: 20,
+    marginLeft: 35,
+    fontFamily: "Capriola-Regular",
+  },
+  count: {
+    color: "#fff",
+    fontSize: 24,
+  },
+  countText: {
+    color: "#fff",
+    fontSize: 18,
+    fontFamily: "Capriola-Regular",
   },
 });
 
