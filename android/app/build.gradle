@@ -130,8 +130,10 @@ android {
 
     defaultConfig {
         applicationId "com.wittyclip"
+        missingDimensionStrategy 'react-native-camera', 'general'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        multiDexEnabled true
         versionCode 2
         versionName "0.1"
     }

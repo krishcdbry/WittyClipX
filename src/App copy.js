@@ -6,7 +6,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import LandingScreen from './containers/Screens/LandingScreen/LandingScreen';
 import HomeScreen from './containers/Screens/HomeScreen/HomeScreen';
-import CameraScreen from './containers/Screens/CameraScreen/CameraScreen';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +18,7 @@ const App = () => {
         barStyle="dark-content"
       />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LandingScreen">
+        <Stack.Navigator initialRouteName="HomeScreen">
           <Stack.Screen
             name="LandingScreen"
             component={LandingScreen}
@@ -28,11 +27,6 @@ const App = () => {
           <Stack.Screen
             name="HomeScreen"
             component={HomeScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="CameraScreen"
-            component={CameraScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

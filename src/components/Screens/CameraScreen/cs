@@ -1,0 +1,309 @@
+"use strict";
+import React, { PureComponent } from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  InteractionManager,
+} from "react-native";
+import { RNCamera } from "react-native-camera";
+
+import CameraRecord from "../../../../assets/images/icons/dot.png";
+import SubmitRecord from "../../../../assets/images/icons/tick.png";
+import CancelRecord from "../../../../assets/images/icons/cancel.png";
+import SwapCamera from "../../../../assets/images/icons/swap-camera.png";
+import Song from "../../../../assets/images/icons/song.png";
+
+import ProgressBar from "../../../plugins/ProgressBar";
+import { screenDimensions } from "../../../utils/global";
+
+class CameraScreen extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      progress: 0,
+      isRecording: false,
+      pause: false,
+      time: 0,
+      maxLength: 15000,
+      cameraType: RNCamera.Constants.Type.front,
+    };
+  }
+
+  toggleCamera = () => {
+    let {cameraType} = this.state;
+    if (cameraType == RNCamera.Constants.Type.back) {
+      cameraType = RNCamera.Constants.Type.front;
+    }
+    else {
+      cameraType = RNCamera.Constants.Type.back;
+    }
+    console.log(cameraType);
+    this.setState({
+      cameraType
+    }, () => {
+      console.log(this.state);
+    })
+  }
+
+  stopCapture = () => {
+    const shouldStopCapture = () => {
+      this.stopTimer();
+      this.camera.stopRecording();
+      this.setState({
+        isRecording: false,
+      });
+    };
+    if (this.props.runAfterInteractions) {
+      InteractionManager.runAfterInteractions(shouldStopCapture);
+    } else {
+      shouldStopCapture();
+    }
+  };
+
+  startTimer = () => {
+    this.timer = setInterval(() => {
+      const time = this.state.time + 10;
+      // console.log(time, this.state.maxLength, time/this.state.maxLength);
+      this.setState({ time, progress: time / this.state.maxLength });
+      if (this.state.maxLength > 0 && time >= this.state.maxLength) {
+        this.stopCapture();
+      }
+    }, 1);
+  };
+
+  stopTimer = () => {
+    if (this.timer) clearInterval(this.timer);
+  };
+
+  convertTimeString = (time) => {
+    return time;
+  };
+
+  renderTimer() {
+    const { isRecording, time, recorded } = this.state;
+    return (
+      <View>
+        {(recorded || isRecording) && (
+          <Text style={this.props.durationTextStyle}>
+            <Text style={styles.dotText}>●</Text> {this.convertTimeString(time)}
+          </Text>
+        )}
+      </View>
+    );
+  }
+
+  render() {
+    const onRecordingEnd = (data) => {
+      console.log(data.uri);
+    };
+
+    const onProgress = (data) => {
+      console.log(data);
+    };
+
+    return (
+      <View style={styles.container}>
+        <RNCamera
+          ref={(ref) => {
+            this.camera = ref;
+          }}
+          style={styles.preview}
+          type={this.state.cameraType}
+          flashMode={RNCamera.Constants.FlashMode.on}
+          captureAudio={false}
+          onProgress={onProgress}
+          onRecordingEnd={onRecordingEnd}
+          androidCameraPermissionOptions={{
+            title: "Permission to use camera",
+            message: "We need your permission to use your camera",
+            buttonPositive: "Ok",
+            buttonNegative: "Cancel",
+          }}
+          androidRecordAudioPermissionOptions={{
+            title: "Permission to use audio recording",
+            message: "We need your permission to use your audio",
+            buttonPositive: "Ok",
+            buttonNegative: "Cancel",
+          }}
+        />
+        {this.state.isRecording && (
+          <View style={styles.progressBar}>
+            <ProgressBar
+              progress={this.state?.progress}
+              width={screenDimensions.ScreenWidth}
+              height={3}
+              color={"#2174be"}
+              unfilledColor={"rgba(255,255,255,0.1)"}
+            />
+          </View>
+        )}
+        <TouchableOpacity style={[styles.iconContainer, styles.swapCamera]} onPress={this.toggleCamera.bind(this)}>
+          <Image source={SwapCamera} style={styles.swapIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.iconContainer, styles.songIcon]}>
+          <Image source={Song} style={styles.swapIcon} />
+        </TouchableOpacity>
+        <View style={styles.bottomControls}>
+          {/* {this.renderTimer()} */}
+          {this.state.isRecording && (
+            <TouchableOpacity
+              onPress={this.startCapture.bind(this)}
+              style={styles.iconContainer}
+            >
+              <Image source={CancelRecord} style={styles.miniIcon} />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={this.startCapture.bind(this)}>
+            <Image source={CameraRecord} style={styles.mediumIcon} />
+          </TouchableOpacity>
+          {this.state.isRecording && (
+            <TouchableOpacity
+              onPress={this.startCapture.bind(this)}
+              style={styles.iconContainer}
+            >
+              <Image source={SubmitRecord} style={styles.miniIcon} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    );
+  }
+
+  takePicture = async () => {
+    if (this.camera) {
+      const options = { quality: 0.5, base64: true };
+      const data = await this.camera.takePictureAsync(options);
+      console.log(data.uri);
+    }
+  };
+
+  recordVideo = async () => {
+    if (this.camera) {
+      const options = {
+        quality: "480p",
+        maxDuration: 15,
+        maxFileSize: 100 * 1024 * 1024,
+      };
+      const { uri, codec = "mp4" } = await this.camera.recordAsync(options);
+      console.log(uri, codec);
+    }
+  };
+
+  stopRecording() {
+    this.camera.stopRecording();
+  }
+
+  startCapture = () => {
+    const shouldStartCapture = () => {
+      this.camera
+        .recordAsync(this.props.recordOptions)
+        .then((data) => {
+          console.log("video capture", data);
+          this.setState({
+            recorded: true,
+            recordedData: data,
+          });
+        })
+        .catch((err) => console.error(err));
+      setTimeout(() => {
+        this.startTimer();
+        this.setState({
+          isRecording: true,
+          recorded: false,
+          recordedData: null,
+          time: 0,
+        });
+      });
+    };
+    if (this.state.maxLength > 0 || this.state.maxLength < 0) {
+      if (this.props.runAfterInteractions) {
+        InteractionManager.runAfterInteractions(shouldStartCapture);
+      } else {
+        shouldStartCapture();
+      }
+    }
+  };
+
+  _recordVideo() {
+    this.camera
+      .capture({ mode: RNCamera.Constants.CaptureMode.video })
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "black",
+  },
+  preview: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+    alignSelf: "center",
+    margin: 20,
+  },
+  bottomControls: {
+    flex: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: 90,
+    padding: 15,
+  },
+  iconContainer: {
+    width: 45,
+    height: 45,
+    borderRadius: 90,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: "rgba(0,0,0,0.35)",
+  },
+  mediumIcon: {
+    width: 60,
+    height: 60,
+  },
+  swapIcon: {
+    width: 32,
+    height: 32,
+  },
+  miniIcon: {
+    width: 20,
+    height: 20,
+  },
+  progressBar: {
+    position: "absolute",
+    bottom: 90,
+    left: 0,
+  },
+  swapCamera: {
+    position: 'absolute',
+    right: 30,
+    bottom: 160,
+    zIndex: 20
+  },
+  songIcon: {
+    position: 'absolute',
+    right: 30,
+    bottom: 100,
+    zIndex: 20
+  }
+});
+
+export default CameraScreen;

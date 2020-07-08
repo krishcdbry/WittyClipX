@@ -15,7 +15,7 @@ import Swiper from "react-native-swiper";
 
 import DeviceInfo from "react-native-device-info";
 
-import icon from "../../../../assets/images/wittyclip.png";
+import icon from "../../../../assets/images/logo-x.png";
 import thumb from "../../../../assets/images/thumb.jpg";
 import thumb1 from "../../../../assets/images/thumb1.jpg";
 import thumb2 from "../../../../assets/images/thumb2.jpg";
@@ -30,7 +30,7 @@ const ScreenHeight = Dimensions.get("window").height;
 const videos = [clip0, clip1, clip2, clip3];
 const videosLength = videos.length;
 
-const LandingScreen = () => {
+const LandingScreen = ({navigation}) => {
   const [activeVideo, setActiveVideo] = useState(0);
   const y_translate = new Animated.Value(0);
   const menu_moveY = y_translate.interpolate({
@@ -130,7 +130,7 @@ const LandingScreen = () => {
           <Image source={thumb2} style={styles.thumbnail} />
         </View>
 
-        <TouchableHighlight style={styles.notifyContainer}>
+        <TouchableHighlight style={styles.notifyContainer} onPress={() => navigation.navigate('HomeScreen')}>
           <Text style={styles.notifyButtonText}> Join Waitlist ! </Text>
         </TouchableHighlight>
 
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   desc: {
-    fontSize: 52,
+    fontSize: 42,
     color: "#fff",
     fontFamily: "Capriola-Regular",
     fontWeight: "400",
@@ -207,12 +207,16 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
   logoContainer: {
-    width: 150,
-    height: 150,
+    width: 90,
+    height: 70,
+    borderRadius: 30,
+    marginLeft: 40,
+    marginBottom: 40,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
+    // backgroundColor: "#ccc"
   },
   logoAnimate: {
     top: 0,
@@ -221,7 +225,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 80,
     right: 50,
-    backgroundColor: "#EA3357",
+    backgroundColor: "#ea3357",
     borderRadius: 15,
     paddingVertical: 3,
     paddingHorizontal: 7,
@@ -270,7 +274,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   view: {
-    backgroundColor: "rgba(0,0,0,0.65)",
+    backgroundColor: "rgba(0,0,0,0.45)",
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start",

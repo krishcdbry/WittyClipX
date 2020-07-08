@@ -1,0 +1,51 @@
+
+export default class App extends PureComponent {
+    constructor(props) {
+      super(props);
+      this.state = {
+        takingPic: false,
+      };
+    }
+  
+    takePicture = async () => {
+      if (this.camera && !this.state.takingPic) {
+         
+        let options = {
+          quality: 0.85,
+          fixOrientation: true,
+          forceUpOrientation: true,
+        };
+  
+        this.setState({takingPic: true});
+  
+        try {
+          const data = await this.camera.takePictureAsync(options);
+          Alert.alert('Success', JSON.stringify(data));
+        } catch (err) {
+          Alert.alert('Error', 'Failed to take picture: ' + (err.message || err));
+          return;
+        } finally {
+          this.setState({takingPic: false});
+        }
+  
+      }
+    };
+  
+    render() {
+      return (
+        <RNCamera
+          ref={ref => {
+            this.camera = ref;
+          }}
+          >
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.btnAlignment}
+            onPress={this.takePicture}>
+            <Icon name="camera" size={50} color="#fff" />
+          </TouchableOpacity>
+        </RNCamera>
+      );
+    }
+  }
+  
