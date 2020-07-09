@@ -7,6 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import LandingScreen from './containers/Screens/LandingScreen/LandingScreen';
 import HomeScreen from './containers/Screens/HomeScreen/HomeScreen';
 import CameraScreen from './containers/Screens/CameraScreen/CameraScreen';
+import RDScreen from './containers/Screens/RDScreen/RDScreen';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,11 @@ const App = () => {
           <Stack.Screen
             name="CameraScreen"
             component={CameraScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="RDScreen"
+            component={RDScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

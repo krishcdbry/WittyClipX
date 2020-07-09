@@ -22,8 +22,6 @@ import shareIcon from "../../../../assets/images/icons/share.png";
 import songIn from "../../../../assets/images/icons/song-in.png";
 import moreOptions from "../../../../assets/images/icons/more-options.png";
 
-console.log(clapIcon);
-
 const ScreenWidth = Dimensions.get("window").width;
 const ScreenHeight = Dimensions.get("window").height;
 
@@ -139,7 +137,6 @@ const TvTab = ({ navigation }) => {
                     </Text>
                   </View>
                 </LinearGradient>
-                {console.log(activeVideo, item.src)}
                 <Video
                   source={{ uri: item.src }}
                   muted={false}
