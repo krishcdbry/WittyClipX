@@ -9,6 +9,7 @@ import {
 import React, { Component } from 'react';
 
 import Svg,{ Circle, Path } from 'react-native-svg';
+import { screenDimensions } from '../utils/global';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedPath = Animated.createAnimatedComponent(Path);

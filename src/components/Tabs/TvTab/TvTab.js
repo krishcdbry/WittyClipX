@@ -69,16 +69,16 @@ const TvTab = ({ navigation }) => {
     <Swiper
       style={styles.wrLandingScreener}
       horizontal={false}
-      height={screenDimensions.ScreenHeight}
+      // height={Dimensions.get("window").height}
       removeClippedSubviews={false}
       onIndexChanged={(idx) => activeVideoHandler(idx)}
-      loadMinimalSize={3}
-      loadMinimalLoader={
-        <View>
-          <Text>Loading....</Text>
-        </View>
-      }
-      loadMinimal={true}
+      // loadMinimalSize={3}
+      // loadMinimalLoader={
+      //   <View>
+      //     <Text>Loading....</Text>
+      //   </View>
+      // }
+      // loadMinimal={true}
     >
       {videos &&
         videos.length > 0 &&
@@ -139,6 +139,7 @@ const TvTab = ({ navigation }) => {
                     </Text>
                   </View>
                 </LinearGradient>
+                {console.log(activeVideo, item.src)}
                 <Video
                   source={{ uri: item.src }}
                   muted={false}
@@ -147,7 +148,7 @@ const TvTab = ({ navigation }) => {
                   rate={1}
                   filter={FilterType.SEPIA}
                   paused={activeVideo !== idx || pauseVideo === idx}
-                  ignoreSilentSwitch={"obey"}
+                  ignoreSilentSwitch={"ignore"}
                   style={styles.clip}
                 />
               </View>
@@ -184,6 +185,7 @@ const styles = StyleSheet.create({
   },
   wrLandingScreener: {
     position: "relative",
+    minHeight: screenDimensions.ScreenHeight
   },
   clip: {
     flex: 1,

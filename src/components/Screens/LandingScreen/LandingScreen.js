@@ -8,6 +8,7 @@ import {
   Dimensions,
   Animated,
   Easing,
+  TouchableNativeFeedback,
   TouchableHighlight,
 } from "react-native";
 import Video, { FilterType } from "react-native-video";
@@ -19,6 +20,9 @@ import icon from "../../../../assets/images/logom.png";
 import thumb from "../../../../assets/images/thumb.jpg";
 import thumb1 from "../../../../assets/images/thumb1.jpg";
 import thumb2 from "../../../../assets/images/thumb2.jpg";
+import play from "../../../../assets/images/icons/play.png";
+import pause from "../../../../assets/images/icons/pause.png";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const clip0 = require("../../../../assets/clips/splash0.mp4");
 const clip1 = require("../../../../assets/clips/splash1.mp4");
@@ -30,8 +34,9 @@ const ScreenHeight = Dimensions.get("window").height;
 const videos = [clip0, clip1, clip2, clip3];
 const videosLength = videos.length;
 
-const LandingScreen = ({navigation}) => {
+const LandingScreen = ({ navigation }) => {
   const [activeVideo, setActiveVideo] = useState(0);
+  const [pauseVideo, setPauseVideo] = useState(false);
   const y_translate = new Animated.Value(0);
   const menu_moveY = y_translate.interpolate({
     inputRange: [0, 1],
@@ -123,20 +128,26 @@ const LandingScreen = ({navigation}) => {
         <View style={styles.notif}>
           <Text style={{ color: "#fff", fontSize: 12 }}>On the way</Text>
         </View>
-
         <View style={styles.thumbs}>
           <Image source={thumb} style={styles.thumbnail} />
           <Image source={thumb1} style={styles.thumbnail} />
           <Image source={thumb2} style={styles.thumbnail} />
         </View>
-
-        <TouchableHighlight style={styles.notifyContainer} onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableHighlight
+          style={styles.notifyContainer}
+          onPress={() => navigation.navigate("HomeScreen")}
+        >
           <Text style={styles.notifyButtonText}> Join Waitlist ! </Text>
         </TouchableHighlight>
-
         <View style={styles.waitinglistCount}>
           <Text style={styles.count}> 4.7k </Text>
           <Text style={styles.countText}> Joined </Text>
+        </View>
+        
+        <View style={styles.playPauseIconContainer}>
+          <TouchableNativeFeedback  onPress={() => setPauseVideo(!pauseVideo)}>
+            <Image source={pauseVideo ? play : pause} style={styles.playpauseIcon}/>
+          </TouchableNativeFeedback>
         </View>
       </View>
 
@@ -151,19 +162,19 @@ const LandingScreen = ({navigation}) => {
       >
         {videos.map((item, idx) => {
           return (
-            <Video
-              key={idx}
-              source={item}
-              muted={true}
-              repeat={true}
-              resizeMode={"cover"}
-              rate={1}
-              volume={0.001}
-              filter={FilterType.SEPIA}
-              paused={activeVideo !== idx}
-              ignoreSilentSwitch={"obey"}
-              style={styles.clip}
-            />
+              <Video
+                key={idx}
+                source={item}
+                muted={true}
+                repeat={true}
+                resizeMode={"cover"}
+                rate={1}
+                volume={0.001}
+                filter={FilterType.SEPIA}
+                paused={activeVideo !== idx || pauseVideo}
+                ignoreSilentSwitch={"obey"}
+                style={styles.clip}
+              />
           );
         })}
       </Swiper>
@@ -233,7 +244,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   logo: {
-    height:72,
+    height: 72,
     resizeMode: "contain",
   },
   titleContainer: {
@@ -310,6 +321,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Capriola-Regular",
   },
+  playPauseIconContainer: {
+    position: "absolute",
+    bottom: 120,
+    right: 30,
+  },
+  playpauseIcon: {
+    width: 20,
+    height: 20,
+  }
 });
 
 export default LandingScreen;
