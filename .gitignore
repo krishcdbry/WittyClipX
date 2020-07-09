@@ -33,6 +33,7 @@ local.properties
 *.apk
 *.aab
 .settings
+*.hprof
 
 # node.js
 #

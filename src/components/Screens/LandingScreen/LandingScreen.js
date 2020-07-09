@@ -15,7 +15,7 @@ import Swiper from "react-native-swiper";
 
 import DeviceInfo from "react-native-device-info";
 
-import icon from "../../../../assets/images/logo-x.png";
+import icon from "../../../../assets/images/logom.png";
 import thumb from "../../../../assets/images/thumb.jpg";
 import thumb1 from "../../../../assets/images/thumb1.jpg";
 import thumb2 from "../../../../assets/images/thumb2.jpg";
@@ -158,6 +158,7 @@ const LandingScreen = ({navigation}) => {
               repeat={true}
               resizeMode={"cover"}
               rate={1}
+              volume={0.001}
               filter={FilterType.SEPIA}
               paused={activeVideo !== idx}
               ignoreSilentSwitch={"obey"}
@@ -210,8 +211,8 @@ const styles = StyleSheet.create({
     width: 90,
     height: 70,
     borderRadius: 30,
-    marginLeft: 40,
-    marginBottom: 40,
+    marginLeft: 30,
+    marginBottom: 25,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -225,14 +226,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 80,
     right: 50,
-    backgroundColor: "#ea3357",
+    backgroundColor: "#22a0ce",
     borderRadius: 15,
     paddingVertical: 3,
     paddingHorizontal: 7,
     color: "#fff",
   },
   logo: {
-    height: 72,
+    height:72,
     resizeMode: "contain",
   },
   titleContainer: {
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   notifyContainer: {
-    backgroundColor: "#1e88e5",
+    backgroundColor: "#FF544D",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
     right: 30,
     borderColor: "#191919",
     elevation: 50,
-    shadowColor: "#000",
+    shadowColor: "#fff",
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.5,
     shadowRadius: 70,
@@ -274,6 +275,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   view: {
+    // backgroundColor: "rgba(0,0,0,0.45)",
     backgroundColor: "rgba(0,0,0,0.45)",
     display: "flex",
     justifyContent: "center",

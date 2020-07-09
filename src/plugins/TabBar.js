@@ -127,15 +127,15 @@ export default class TabBar extends Component{
                     </View>
                     <Svg version="1.1" id="bottom-bar" x="0px" y="0px" width="100%" height="100" viewBox="0 0 1092 200" space="preserve">
                         <AnimatedPath
-                            fill={bgNavBar ? bgNavBar : '#202020'}
-                            stroke={stroke ? stroke : '#202020'}
-                            d={ `M30,60h${this.state.pathX}.3c17.2,0,31,14.4,30,31.6c-0.2,2.7-0.3,5.5-0.3,8.2c0,71.2,58.1,129.6,129.4,130c72.1,0.3,130.6-58,130.6-130c0-2.7-0.1-5.4-0.2-8.1C${this.state.pathY}.7,74.5,${this.state.pathA}.5,60,${this.state.pathB}.7,60H1062c16.6,0,30,13.4,30,30v94c0,42-34,76-76,76H76c-42,0-76-34-76-76V90C0,73.4,13.4,60,30,60z`
-                        }/>
+                            fill={bgNavBar ? bgNavBar : 'transparent'}
+                            stroke={stroke ? stroke : 'transparent'}
+                           
+                        />
                         <AnimatedCircle
                             ref={ ref => this._myCircle = ref }
                             fill={bgNavBarSelector ? bgNavBarSelector : '#343434'}
                             stroke={stroke ? stroke : '#343434'}
-                            cx="546" cy="245"
+                            cx="546" cy="100"
                             r="14"
                         />
                     </Svg>
@@ -194,7 +194,9 @@ const styles = StyleSheet.create({
         zIndex: 0,
         width: (Dimensions.get('window').width),
         position: 'absolute',
-        bottom:15,
+        bottom:0,
+        height: 60,
+        backgroundColor: "transparent"
     },
     subContent: {
         flexDirection: 'row',
@@ -213,8 +215,8 @@ const styles = StyleSheet.create({
         zIndex: 0,
     },
     navImage: {
-        width: 23,
-        height: 23,
+        width: 19,
+        height: 19,
     },
     circle: {
         bottom: 0,
