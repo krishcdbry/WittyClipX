@@ -479,6 +479,9 @@ class CameraScreen extends PureComponent {
       pause: false,
       time: 0,
       progress: 0,
+      recordedData: [],
+      finalVideoUrl: null,
+      videoReady: false
     });
   };
 
