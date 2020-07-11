@@ -82,6 +82,12 @@ target 'wittyclip' do
 
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
+  pod 'RNReactNativeGetMusicFiles', :path => '../node_modules/react-native-get-music-files'
+
+  pod 'RNPlayAudio', :path => '../node_modules/react-native-play-audio'
+
   target 'wittyclipTests' do
     inherit! :complete
     # Pods for testing

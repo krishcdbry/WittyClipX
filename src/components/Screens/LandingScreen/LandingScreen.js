@@ -22,7 +22,6 @@ import thumb1 from "../../../../assets/images/thumb1.jpg";
 import thumb2 from "../../../../assets/images/thumb2.jpg";
 import play from "../../../../assets/images/icons/play.png";
 import pause from "../../../../assets/images/icons/pause.png";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const clip0 = require("../../../../assets/clips/splash0.mp4");
 const clip1 = require("../../../../assets/clips/splash1.mp4");
@@ -65,8 +64,6 @@ const LandingScreen = ({ navigation }) => {
     InstallTime,
     Manufacturer,
   };
-
-  console.log(deviceData);
 
   const animate = (count = 0) => {
     Animated.sequence([
@@ -165,14 +162,12 @@ const LandingScreen = ({ navigation }) => {
               <Video
                 key={idx}
                 source={item}
-                muted={true}
                 repeat={true}
                 resizeMode={"cover"}
                 rate={1}
-                volume={0.001}
                 filter={FilterType.SEPIA}
                 paused={activeVideo !== idx || pauseVideo}
-                ignoreSilentSwitch={"obey"}
+                ignoreSilentSwitch={"ignore"}
                 style={styles.clip}
               />
           );

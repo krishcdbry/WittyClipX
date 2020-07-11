@@ -60,7 +60,7 @@ const TvTab = ({ navigation }) => {
   };
 
   useEffect(() => {
-    fetchVideos();
+    // fetchVideos();
   }, []);
 
   return (

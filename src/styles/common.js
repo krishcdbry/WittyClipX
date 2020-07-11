@@ -8,6 +8,14 @@ const CommonStyles = StyleSheet.create({
     },
     darkBackground: {
         backgroundColor: '#202020'
+    },
+    whiteColor: {
+        color: '#fff'
+    },
+    flex: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
     }
 });
 
