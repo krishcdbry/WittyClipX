@@ -9,24 +9,19 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* wittyclipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* wittyclipTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1EBAAAA2CAE445D3BB29400C /* libRNVideoEditor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96832A84E92D4368B25619AB /* libRNVideoEditor.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* wittyclipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* wittyclipTests.m */; };
-		343750FFCA5B3C2968C8585E /* libPods-wittyclip-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2960A0F71B8F1F5692CA7A /* libPods-wittyclip-tvOSTests.a */; };
-		35DD65FEA60B4BF5904C721F /* FredokaOne-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F8B15A1ED52845A0AC952139 /* FredokaOne-Regular.otf */; };
-		4F9CD9C95DB1F2380232A8A2 /* libPods-wittyclip-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF5E6A98C4579C01BDDB3F9 /* libPods-wittyclip-tvOS.a */; };
-		614A8F2B78A949A59BC5C5E7 /* MeriendaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C91E6CD69AE2427AAD0BB4CB /* MeriendaOne-Regular.ttf */; };
-		71D6750C24B21A54003278DA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 71D6750B24B21A54003278DA /* Default-568h@2x.png */; };
-		8D6739EE65094194816975F5 /* Capriola-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D14BB4A57F2349B4BF1022C6 /* Capriola-Regular.ttf */; };
-		A00FBE2DBE4945149C29524A /* FredokaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3213CF8D68C04C72A7F2C51F /* FredokaOne-Regular.ttf */; };
-		CD74BC6958454FD28C2CA63A /* ABeeZee-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 762F43F2DD8C4838B4C59E66 /* ABeeZee-Regular.ttf */; };
-		CDE5809B9AB55FFF2A70E59A /* libPods-wittyclip-wittyclipTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FF7AD224C0F0461CBFEC0FF /* libPods-wittyclip-wittyclipTests.a */; };
-		E95CBC0034B4A1254476AE31 /* libPods-wittyclip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3787257B6A48E8CC23F973CA /* libPods-wittyclip.a */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		AFA2A9C8EE134EDDA957B99D /* ABeeZee-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D4368050EDC14D52972EF2B0 /* ABeeZee-Regular.ttf */; };
+		B72C0B25D8BB44B5985CAB8F /* Capriola-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EBA7B3D6CEC544D383665BD3 /* Capriola-Regular.ttf */; };
+		9C1917D1E7FD485CB2AE223C /* FredokaOne-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6BE0A9D407244356BCD3EB30 /* FredokaOne-Regular.otf */; };
+		934543919EA74ED58AA2B5D3 /* FredokaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 624089055E85486FB2A44DB4 /* FredokaOne-Regular.ttf */; };
+		1FCC45F560F640A89D18838E /* MeriendaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7254E434218F48CA876416C5 /* MeriendaOne-Regular.ttf */; };
+		ECDD3DA013AA4EB68073D20F /* libRNVideoEditor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E70A29D74EEC4D0DAAE9D7D5 /* libRNVideoEditor.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,13 +39,6 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "wittyclip-tvOS";
 		};
-		71DE945F24B8FDC800BE6D52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3C840BBFB03D411CAF0F317F /* RNVideoEditor.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNVideoEditor;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -58,37 +46,24 @@
 		00E356EE1AD99517003FC87E /* wittyclipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = wittyclipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* wittyclipTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = wittyclipTests.m; sourceTree = "<group>"; };
-		099BF83346FE63A378C584F1 /* Pods-wittyclip-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wittyclip-tvOS.release.xcconfig"; path = "Target Support Files/Pods-wittyclip-tvOS/Pods-wittyclip-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* wittyclip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wittyclip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = wittyclip/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = wittyclip/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = wittyclip/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = wittyclip/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = wittyclip/main.m; sourceTree = "<group>"; };
-		1A35ADE1E4C5262ECD23A96C /* Pods-wittyclip-wittyclipTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wittyclip-wittyclipTests.release.xcconfig"; path = "Target Support Files/Pods-wittyclip-wittyclipTests/Pods-wittyclip-wittyclipTests.release.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* wittyclip-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "wittyclip-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* wittyclip-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "wittyclip-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F29E05A938E18DBBF9B5AA5 /* Pods-wittyclip-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wittyclip-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-wittyclip-tvOSTests/Pods-wittyclip-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		3213CF8D68C04C72A7F2C51F /* FredokaOne-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FredokaOne-Regular.ttf"; path = "../assets/fonts/FredokaOne-Regular.ttf"; sourceTree = "<group>"; };
-		3787257B6A48E8CC23F973CA /* libPods-wittyclip.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wittyclip.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C840BBFB03D411CAF0F317F /* RNVideoEditor.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVideoEditor.xcodeproj; path = "../node_modules/react-native-video-editor/ios/RNVideoEditor.xcodeproj"; sourceTree = "<group>"; };
-		3FF7AD224C0F0461CBFEC0FF /* libPods-wittyclip-wittyclipTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wittyclip-wittyclipTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		51CE5D6F61ECEFE183DFC948 /* Pods-wittyclip-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wittyclip-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-wittyclip-tvOS/Pods-wittyclip-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		5E95AAC5E28C5B7EE058A408 /* Pods-wittyclip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wittyclip.debug.xcconfig"; path = "Target Support Files/Pods-wittyclip/Pods-wittyclip.debug.xcconfig"; sourceTree = "<group>"; };
-		71D6750B24B21A54003278DA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		762F43F2DD8C4838B4C59E66 /* ABeeZee-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ABeeZee-Regular.ttf"; path = "../assets/fonts/ABeeZee-Regular.ttf"; sourceTree = "<group>"; };
-		7B2960A0F71B8F1F5692CA7A /* libPods-wittyclip-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wittyclip-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		96832A84E92D4368B25619AB /* libRNVideoEditor.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVideoEditor.a; sourceTree = "<group>"; };
-		A2FD9DD585054D7DB06915E5 /* Pods-wittyclip-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wittyclip-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-wittyclip-tvOSTests/Pods-wittyclip-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		B9EF0E591989A5BA92A978F1 /* Pods-wittyclip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wittyclip.release.xcconfig"; path = "Target Support Files/Pods-wittyclip/Pods-wittyclip.release.xcconfig"; sourceTree = "<group>"; };
-		C91E6CD69AE2427AAD0BB4CB /* MeriendaOne-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "MeriendaOne-Regular.ttf"; path = "../assets/fonts/MeriendaOne-Regular.ttf"; sourceTree = "<group>"; };
-		D14BB4A57F2349B4BF1022C6 /* Capriola-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Capriola-Regular.ttf"; path = "../assets/fonts/Capriola-Regular.ttf"; sourceTree = "<group>"; };
-		DB0F0D34F8A8B533B2EB37D0 /* Pods-wittyclip-wittyclipTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wittyclip-wittyclipTests.debug.xcconfig"; path = "Target Support Files/Pods-wittyclip-wittyclipTests/Pods-wittyclip-wittyclipTests.debug.xcconfig"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = wittyclip/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		EDF5E6A98C4579C01BDDB3F9 /* libPods-wittyclip-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wittyclip-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F8B15A1ED52845A0AC952139 /* FredokaOne-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FredokaOne-Regular.otf"; path = "../assets/fonts/FredokaOne-Regular.otf"; sourceTree = "<group>"; };
+		D4368050EDC14D52972EF2B0 /* ABeeZee-Regular.ttf */ = {isa = PBXFileReference; name = "ABeeZee-Regular.ttf"; path = "../assets/fonts/ABeeZee-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EBA7B3D6CEC544D383665BD3 /* Capriola-Regular.ttf */ = {isa = PBXFileReference; name = "Capriola-Regular.ttf"; path = "../assets/fonts/Capriola-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6BE0A9D407244356BCD3EB30 /* FredokaOne-Regular.otf */ = {isa = PBXFileReference; name = "FredokaOne-Regular.otf"; path = "../assets/fonts/FredokaOne-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		624089055E85486FB2A44DB4 /* FredokaOne-Regular.ttf */ = {isa = PBXFileReference; name = "FredokaOne-Regular.ttf"; path = "../assets/fonts/FredokaOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7254E434218F48CA876416C5 /* MeriendaOne-Regular.ttf */ = {isa = PBXFileReference; name = "MeriendaOne-Regular.ttf"; path = "../assets/fonts/MeriendaOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		65A5A5CC354643F88A3FEFA5 /* RNVideoEditor.xcodeproj */ = {isa = PBXFileReference; name = "RNVideoEditor.xcodeproj"; path = "../node_modules/react-native-video-editor/ios/RNVideoEditor.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		E70A29D74EEC4D0DAAE9D7D5 /* libRNVideoEditor.a */ = {isa = PBXFileReference; name = "libRNVideoEditor.a"; path = "libRNVideoEditor.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,7 +71,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDE5809B9AB55FFF2A70E59A /* libPods-wittyclip-wittyclipTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,8 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E95CBC0034B4A1254476AE31 /* libPods-wittyclip.a in Frameworks */,
-				1EBAAAA2CAE445D3BB29400C /* libRNVideoEditor.a in Frameworks */,
+				ECDD3DA013AA4EB68073D20F /* libRNVideoEditor.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,7 +86,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F9CD9C95DB1F2380232A8A2 /* libPods-wittyclip-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,7 +93,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				343750FFCA5B3C2968C8585E /* libPods-wittyclip-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,7 +124,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
+				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = wittyclip;
@@ -164,34 +135,14 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				3787257B6A48E8CC23F973CA /* libPods-wittyclip.a */,
-				EDF5E6A98C4579C01BDDB3F9 /* libPods-wittyclip-tvOS.a */,
-				7B2960A0F71B8F1F5692CA7A /* libPods-wittyclip-tvOSTests.a */,
-				3FF7AD224C0F0461CBFEC0FF /* libPods-wittyclip-wittyclipTests.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		71DE945B24B8FDC700BE6D52 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				96832A84E92D4368B25619AB /* libRNVideoEditor.a */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		71DE945C24B8FDC800BE6D52 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				71DE946024B8FDC800BE6D52 /* libRNVideoEditor.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				3C840BBFB03D411CAF0F317F /* RNVideoEditor.xcodeproj */,
+				65A5A5CC354643F88A3FEFA5 /* RNVideoEditor.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -199,15 +150,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				71D6750B24B21A54003278DA /* Default-568h@2x.png */,
 				13B07FAE1A68108700A75B9A /* wittyclip */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* wittyclipTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				B374974EAAEE5BCB69238004 /* Pods */,
-				E7369B43A8F84125AE4817DB /* Resources */,
-				71DE945B24B8FDC700BE6D52 /* Recovered References */,
+				45D1D3A2E3364C36AAA2E871 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -225,32 +173,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B374974EAAEE5BCB69238004 /* Pods */ = {
-			isa = PBXGroup;
+		45D1D3A2E3364C36AAA2E871 /* Resources */ = {
+			isa = "PBXGroup";
 			children = (
-				5E95AAC5E28C5B7EE058A408 /* Pods-wittyclip.debug.xcconfig */,
-				B9EF0E591989A5BA92A978F1 /* Pods-wittyclip.release.xcconfig */,
-				51CE5D6F61ECEFE183DFC948 /* Pods-wittyclip-tvOS.debug.xcconfig */,
-				099BF83346FE63A378C584F1 /* Pods-wittyclip-tvOS.release.xcconfig */,
-				2F29E05A938E18DBBF9B5AA5 /* Pods-wittyclip-tvOSTests.debug.xcconfig */,
-				A2FD9DD585054D7DB06915E5 /* Pods-wittyclip-tvOSTests.release.xcconfig */,
-				DB0F0D34F8A8B533B2EB37D0 /* Pods-wittyclip-wittyclipTests.debug.xcconfig */,
-				1A35ADE1E4C5262ECD23A96C /* Pods-wittyclip-wittyclipTests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		E7369B43A8F84125AE4817DB /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				3213CF8D68C04C72A7F2C51F /* FredokaOne-Regular.ttf */,
-				F8B15A1ED52845A0AC952139 /* FredokaOne-Regular.otf */,
-				D14BB4A57F2349B4BF1022C6 /* Capriola-Regular.ttf */,
-				762F43F2DD8C4838B4C59E66 /* ABeeZee-Regular.ttf */,
-				C91E6CD69AE2427AAD0BB4CB /* MeriendaOne-Regular.ttf */,
+				D4368050EDC14D52972EF2B0 /* ABeeZee-Regular.ttf */,
+				EBA7B3D6CEC544D383665BD3 /* Capriola-Regular.ttf */,
+				6BE0A9D407244356BCD3EB30 /* FredokaOne-Regular.otf */,
+				624089055E85486FB2A44DB4 /* FredokaOne-Regular.ttf */,
+				7254E434218F48CA876416C5 /* MeriendaOne-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -259,7 +193,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "wittyclipTests" */;
 			buildPhases = (
-				9C60AF989DC9DF44E444FE72 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -278,7 +211,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "wittyclip" */;
 			buildPhases = (
-				C73BBBC235BC2DC2542DCC75 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
@@ -298,7 +230,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "wittyclip-tvOS" */;
 			buildPhases = (
-				31D0928378E952F92966C31A /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -318,7 +249,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "wittyclip-tvOSTests" */;
 			buildPhases = (
-				2D1CBD4D72FAB901763F7EE4 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -339,14 +269,13 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = F64K3AV394;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -371,12 +300,6 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 71DE945C24B8FDC800BE6D52 /* Products */;
-					ProjectRef = 3C840BBFB03D411CAF0F317F /* RNVideoEditor.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* wittyclip */,
@@ -386,16 +309,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		71DE946024B8FDC800BE6D52 /* libRNVideoEditor.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNVideoEditor.a;
-			remoteRef = 71DE945F24B8FDC800BE6D52 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
@@ -409,14 +322,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				71D6750C24B21A54003278DA /* Default-568h@2x.png in Resources */,
-				A00FBE2DBE4945149C29524A /* FredokaOne-Regular.ttf in Resources */,
-				35DD65FEA60B4BF5904C721F /* FredokaOne-Regular.otf in Resources */,
-				8D6739EE65094194816975F5 /* Capriola-Regular.ttf in Resources */,
-				CD74BC6958454FD28C2CA63A /* ABeeZee-Regular.ttf in Resources */,
-				614A8F2B78A949A59BC5C5E7 /* MeriendaOne-Regular.ttf in Resources */,
+				AFA2A9C8EE134EDDA957B99D /* ABeeZee-Regular.ttf in Resources */,
+				B72C0B25D8BB44B5985CAB8F /* Capriola-Regular.ttf in Resources */,
+				9C1917D1E7FD485CB2AE223C /* FredokaOne-Regular.otf in Resources */,
+				934543919EA74ED58AA2B5D3 /* FredokaOne-Regular.ttf in Resources */,
+				1FCC45F560F640A89D18838E /* MeriendaOne-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,94 +377,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		2D1CBD4D72FAB901763F7EE4 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-wittyclip-tvOSTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		31D0928378E952F92966C31A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-wittyclip-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9C60AF989DC9DF44E444FE72 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-wittyclip-wittyclipTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C73BBBC235BC2DC2542DCC75 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-wittyclip-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -644,40 +468,18 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13B07FB21A68108700A75B9A /* Base */,
-			);
-			name = LaunchScreen.xib;
-			path = wittyclip;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DB0F0D34F8A8B533B2EB37D0 /* Pods-wittyclip-wittyclipTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
-				);
 				INFOPLIST_FILE = wittyclipTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -686,27 +488,25 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/wittyclip.app/wittyclip";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
+				);
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A35ADE1E4C5262ECD23A96C /* Pods-wittyclip-wittyclipTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
-				);
 				INFOPLIST_FILE = wittyclipTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -715,28 +515,25 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/wittyclip.app/wittyclip";
-			};
-			name = Release;
-		};
-		13B07F941A680F5B00A75B9A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5E95AAC5E28C5B7EE058A408 /* Pods-wittyclip.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = F64K3AV394;
-				ENABLE_BITCODE = NO;
-				GCC_PREPROCESSOR_DEFINITIONS = (
+				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"FB_SONARKIT_ENABLED=1",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
 				);
+			};
+			name = Release;
+		};
+		13B07F941A680F5B00A75B9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = wittyclip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -748,23 +545,20 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
+				);
 			};
 			name = Debug;
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B9EF0E591989A5BA92A978F1 /* Pods-wittyclip.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = F64K3AV394;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
-				);
 				INFOPLIST_FILE = wittyclip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -775,12 +569,15 @@
 				PRODUCT_NAME = wittyclip;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
+				);
 			};
 			name = Release;
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 51CE5D6F61ECEFE183DFC948 /* Pods-wittyclip-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -791,16 +588,8 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
-				);
 				INFOPLIST_FILE = "wittyclip-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -810,13 +599,20 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
+				);
 			};
 			name = Debug;
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 099BF83346FE63A378C584F1 /* Pods-wittyclip-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -827,16 +623,8 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
-				);
 				INFOPLIST_FILE = "wittyclip-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -846,13 +634,20 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
+				);
 			};
 			name = Release;
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2F29E05A938E18DBBF9B5AA5 /* Pods-wittyclip-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -862,16 +657,8 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
-				);
 				INFOPLIST_FILE = "wittyclip-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -882,12 +669,19 @@
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/wittyclip-tvOS.app/wittyclip-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
+				);
 			};
 			name = Debug;
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A2FD9DD585054D7DB06915E5 /* Pods-wittyclip-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -897,16 +691,8 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
-				);
 				INFOPLIST_FILE = "wittyclip-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -917,6 +703,14 @@
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/wittyclip-tvOS.app/wittyclip-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-video-editor/ios/**",
+				);
 			};
 			name = Release;
 		};
@@ -967,7 +761,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
@@ -1020,7 +814,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>WityClip</string>
+	<string>WittyClip</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -55,23 +55,11 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Muli-Medium.ttf</string>
-		<string>Muli-Regular.ttf</string>
-		<string>Muli-SemiBold.ttf</string>
-		<string>Muli-SemiBoldItalic.ttf</string>
-		<string>FredokaOne-Regular.ttf</string>
-		<string>FredokaOne-Regular.otf</string>
-		<string>MeriendaOne-Regular.ttf</string>
 		<string>ABeeZee-Regular.ttf</string>
 		<string>Capriola-Regular.ttf</string>
+		<string>FredokaOne-Regular.otf</string>
+		<string>FredokaOne-Regular.ttf</string>
+		<string>MeriendaOne-Regular.ttf</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>Your message to user when the camera is accessed for the first time</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Your message to user when the photo library is accessed for the first time</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Your message to user when the photo library is accessed for the first time</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Your message to user when the microphone is accessed for the first time</string>
 </dict>
 </plist>

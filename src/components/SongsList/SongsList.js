@@ -52,6 +52,7 @@ class SongsList extends PureComponent {
   }
 
   fetchMediaFromDevice() {
+    console.log("Fetching", MusicFiles.getAll)
     MusicFiles.getAll({
       blured: true, // works only when 'cover' is set to true
       artist: true,
@@ -63,6 +64,7 @@ class SongsList extends PureComponent {
       fields: ["title", "albumTitle", "genre", "lyrics", "artwork", "duration", "cover"], // for iOs Version
     })
       .then((songs) => {
+        console.log("Songs --- ", songs)
         if (songs && songs.length > 0) {
           storeSongs(songs);
           console.log("Storing songs h ehehe")
@@ -85,8 +87,10 @@ class SongsList extends PureComponent {
   }
 
   componentDidMount() {
+    this.fetchMediaFromDevice();
     try {
       AsyncStorage.getItem("songs").then((data) => {
+        console.log(data);
         if (data) {
           const songs = JSON.parse(data);
           this.setState({

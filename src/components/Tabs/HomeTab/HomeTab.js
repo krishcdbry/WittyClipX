@@ -27,7 +27,7 @@ function HomeTab({ navigation }) {
   };
 
   useEffect(() => {
-    // fetchVideos();
+    fetchVideos();
   }, []);
 
   const onContentSizeChange = (contentWidth, contentHeight) => {

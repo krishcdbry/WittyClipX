@@ -14,26 +14,20 @@ import {
   Platform,
   Easing,
   TouchableWithoutFeedback,
-  PermissionsAndroid,
   DeviceEventEmitter,
 } from "react-native";
-import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import { RNCamera } from "react-native-camera";
 import ImagePicker from "react-native-image-picker";
 import Video, { FilterType } from "react-native-video";
 import RNVideoEditor from "react-native-video-editor";
 import Toast from "react-native-simple-toast";
 import AudioPlayer from "react-native-play-audio";
-import RNFS from "react-native-fs";
-import FileViewer from "react-native-file-viewer";
 
-import {
-  requestMultiple,
-  PERMISSIONS,
-  RESULTS,
-} from "react-native-permissions";
-import { RNFFmpeg, RNFFprobe, RNFFmpegConfig } from "react-native-ffmpeg";
-import CameraRoll from "@react-native-community/cameraroll";
+import {requestMultiple, PERMISSIONS, RESULTS} from 'react-native-permissions';
+ 
+
+ import { RNFFmpeg, RNFFprobe, RNFFmpegConfig } from 'react-native-ffmpeg';
+
 
 import SubmitRecord from "../../../../assets/images/icons/tick.png";
 import CancelRecord from "../../../../assets/images/icons/cancel.png";
@@ -45,7 +39,7 @@ import Timer from "../../../../assets/images/icons/timer.png";
 import Gallery from "../../../../assets/images/icons/gallery.png";
 import More from "../../../../assets/images/icons/more.png";
 import Back from "../../../../assets/images/icons/back.png";
-import Logo from "../../../../assets/images/logom.png";
+import splash from "../../../../assets/clips/splash0.mp4";
 
 import ProgressBar from "../../../plugins/ProgressBar";
 import { screenDimensions } from "../../../utils/global";
@@ -64,10 +58,7 @@ class RDScreen extends PureComponent {
       recordedData: [],
       pause: false,
       time: 0,
-      recordedVideoTime: 0,
-      finalVideoCurrentTime: 0,
       maxLength: 15,
-      cameraZoom: 0,
       cameraType: RNCamera.Constants.Type.front,
       showSongPicker: false,
       songPickerAnimatedValue: new Animated.Value(0),
@@ -81,8 +72,7 @@ class RDScreen extends PureComponent {
       opacityValue: new Animated.Value(maxOpacity),
       songs: [],
       selectedSong: null,
-      finalVideoThumbPath: null,
-      nonCollidingMultiSliderValue: [0, 100],
+      finalVideoThumb: []
     };
 
     this.spinValue = new Animated.Value(0);
@@ -96,29 +86,17 @@ class RDScreen extends PureComponent {
     this.pauseCapture = this.pauseCapture.bind(this);
     this.stopCapture = this.stopCapture.bind(this);
     this.songSelected = this.songSelected.bind(this);
-    this.selectZoom = this.selectZoom.bind(this);
   }
 
   componentDidMount() {
-    console.log("PATH ---------------", RNFS.DocumentDirectoryPath);
-
     this.setState({
       width: screenDimensions.ScreenWidth / 2,
     });
-    requestMultiple([
-      PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-      PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-    ]).then((result) => {
+    requestMultiple([PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE, PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE ]).then((result) => {
       console.log("Results - ", result);
       //  this.setState({
       //    permissionsEnabled: true
       //  })
-    });
-  }
-
-  selectZoom(cameraZoom = 0) {
-    this.setState({
-      cameraZoom,
     });
   }
 
@@ -290,7 +268,7 @@ class RDScreen extends PureComponent {
   };
 
   convertTimeString = (time) => {
-    return `${Number(time).toFixed(0)} Sec`;
+    return `${Number(time ).toFixed(0)} Sec`;
   };
 
   renderTimer() {
@@ -316,140 +294,255 @@ class RDScreen extends PureComponent {
     );
   }
 
-  checkAndroidPermission = async () => {
-    try {
-      console.log("ASKING PERMISSIONS");
-      const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-      PermissionsAndroid.request(permission).then((res) => {
-        console.log("ASKING PERMISSIONS RESOLVING", res);
-        Promise.resolve();
-      });
-    } catch (error) {
-      Promise.reject(error);
-    }
-  };
-
-  savePicture = async (uri) => {
-    if (Platform.OS === "android") {
-      await this.requestExternalStoragePermission();
-      console.log("THEN SAVING");
-      CameraRoll.save(uri).then(
-        (res) => {
-          console.log("Success");
-        },
-        (err) => {
-          console.log("Error", err);
-        }
-      );
-    }
-  };
-
-  generateFinalVideoOutputFile = () => {
-    return `file://${
-      RNFS.DocumentDirectoryPath
-    }-generated-output-file-${new Date().toLocaleTimeString()}.mp4`;
-  };
-
-  generateVideoFrames = () => {
-    const { finalVideoUrl } = this.state;
-    RNFFmpeg.execute(
-      `-i ${finalVideoUrl} -r 1 -vf scale=350:-1 ${finalVideoUrl}_thumb_%01d.jpg`
-    ).then(
-      (res) => {
-        console.log("Execute result", res);
-        this.setState({
-          finalVideoThumbPath: `${finalVideoUrl}_thumb_`,
-        });
-      },
-      (err) => {
-        console.log("Error generating thumbnails", err);
-      }
-    );
-  };
-
-  processFinalVideo = async (file) => {
-    const finalVideoUrl = file;
-
-    // Generating watermark
-    const watermark = "logom.png";
-    const watermarkAbsolutePath = `file://${
-      RNFS.DocumentDirectoryPath
-    }/${watermark}`;
-
-    // TODO: Some error in this - await not working
-    RNFS.copyFileAssets(watermark, watermarkAbsolutePath)
-      .then(async () => {
-        // Output file
-        const finalFileWithWatermark = this.generateFinalVideoOutputFile();
-
-        const command = `-i ${finalVideoUrl} -i ${watermarkAbsolutePath}\
-               -qscale:v 18 -pix_fmt yuv420p -c:a aac -strict -2 \
-               -filter_complex "overlay=x=15:y=15" \
-               ${finalFileWithWatermark}`;
-
-        const finalVideoFile = await RNFFmpeg.execute(command);
-        if (!finalVideoFile) {
-          this.setState({ finalVideoUrl });
-        }
-        this.setState({ finalVideoUrl: finalFileWithWatermark }, () => {
-          //
-        });
-      })
-      .catch((_err) => {
-        console.log("error", _err);
-        this.setState({ finalVideoUrl });
-      });
-  };
-
-  submitVideo = async () => {
+  submitVideo = () => {
     const { isRecording } = this.state;
-
     if (isRecording) {
       this.stopRecording();
     }
-
     setTimeout(() => {
       const videos = this.state.recordedData.map((item) => item.uri);
       this.setState({
         pause: false,
         videoReady: true,
         recorded: true,
-        recordedVideoTime: this.state.time,
-        nonCollidingMultiSliderValue: [0, this.state.time],
       });
+
+      // console.log(RNFFmpeg.get, videos[0], videos[1])
+
+      RNFFmpegConfig.getPlatform().then(res => console.log("Platform", res))
+
+      RNFFprobe.getMediaInformation(videos[0]).then(info => {
+        console.log('Result: ' + JSON.stringify(info));
+        console.log('Media Information');
+        console.log('Path: ' + info.path);
+        console.log('Format: ' + info.format);
+        console.log('Duration: ' + info.duration);
+        console.log('Start time: ' + info.startTime);
+        console.log('Bitrate: ' + info.bitrate);
+        if (info.streams) {
+            for (var i = 0; i < info.streams.length; i++) {
+                console.log('Stream id: ' + info.streams[i].index);
+                console.log('Stream type: ' + info.streams[i].type);
+                console.log('Stream codec: ' + info.streams[i].codec);
+                console.log('Stream full codec: ' + info.streams[i].fullCodec);
+                console.log('Stream format: ' + info.streams[i].format);
+                console.log('Stream full format: ' + info.streams[i].fullFormat);
+                console.log('Stream width: ' + info.streams[i].width);
+                console.log('Stream height: ' + info.streams[i].height);
+                console.log('Stream bitrate: ' + info.streams[i].bitrate);
+                console.log('Stream sample rate: ' + info.streams[i].sampleRate);
+                console.log('Stream sample format: ' + info.streams[i].sampleFormat);
+                console.log('Stream channel layout: ' + info.streams[i].channelLayout);
+                console.log('Stream sar: ' + info.streams[i].sampleAspectRatio);
+                console.log('Stream dar: ' + info.streams[i].displayAspectRatio);
+                console.log('Stream average frame rate: ' + info.streams[i].averageFrameRate);
+                console.log('Stream real frame rate: ' + info.streams[i].realFrameRate);
+                console.log('Stream time base: ' + info.streams[i].timeBase);
+                console.log('Stream codec time base: ' + info.streams[i].codecTimeBase);
+                
+                if (info.streams[i].metadata) {
+                    console.log('Stream metadata encoder: ' + info.streams[i].metadata.encoder);
+                    console.log('Stream metadata rotate: ' + info.streams[i].metadata.rotate);
+                    console.log('Stream metadata creation time: ' + info.streams[i].metadata.creation_time);
+                    console.log('Stream metadata handler name: ' + info.streams[i].metadata.handler_name);
+                }
+    
+                if (info.streams[i].sidedata) {
+                    console.log('Stream side data displaymatrix: ' + info.streams[i].sidedata.displaymatrix);
+                }
+            }
+        }
+    });
+    
+    console.log("==========", videos[1])
+
+    RNFFprobe.getMediaInformation(videos[1]).then(info => {
+      console.log('Result: ' + JSON.stringify(info));
+      console.log('Media Information');
+      console.log('Path: ' + info.path);
+      console.log('Format: ' + info.format);
+      console.log('Duration: ' + info.duration);
+      console.log('Start time: ' + info.startTime);
+      console.log('Bitrate: ' + info.bitrate);
+      if (info.streams) {
+          for (var i = 0; i < info.streams.length; i++) {
+              console.log('Stream id: ' + info.streams[i].index);
+              console.log('Stream type: ' + info.streams[i].type);
+              console.log('Stream codec: ' + info.streams[i].codec);
+              console.log('Stream full codec: ' + info.streams[i].fullCodec);
+              console.log('Stream format: ' + info.streams[i].format);
+              console.log('Stream full format: ' + info.streams[i].fullFormat);
+              console.log('Stream width: ' + info.streams[i].width);
+              console.log('Stream height: ' + info.streams[i].height);
+              console.log('Stream bitrate: ' + info.streams[i].bitrate);
+              console.log('Stream sample rate: ' + info.streams[i].sampleRate);
+              console.log('Stream sample format: ' + info.streams[i].sampleFormat);
+              console.log('Stream channel layout: ' + info.streams[i].channelLayout);
+              console.log('Stream sar: ' + info.streams[i].sampleAspectRatio);
+              console.log('Stream dar: ' + info.streams[i].displayAspectRatio);
+              console.log('Stream average frame rate: ' + info.streams[i].averageFrameRate);
+              console.log('Stream real frame rate: ' + info.streams[i].realFrameRate);
+              console.log('Stream time base: ' + info.streams[i].timeBase);
+              console.log('Stream codec time base: ' + info.streams[i].codecTimeBase);
+              
+              if (info.streams[i].metadata) {
+                  console.log('Stream metadata encoder: ' + info.streams[i].metadata.encoder);
+                  console.log('Stream metadata rotate: ' + info.streams[i].metadata.rotate);
+                  console.log('Stream metadata creation time: ' + info.streams[i].metadata.creation_time);
+                  console.log('Stream metadata handler name: ' + info.streams[i].metadata.handler_name);
+              }
+  
+              if (info.streams[i].sidedata) {
+                  console.log('Stream side data displaymatrix: ' + info.streams[i].sidedata.displaymatrix);
+              }
+          }
+      }
+  });
 
       if (videos.length > 1) {
         try {
+
+          
+          // console.log(RNFFmpegConfig.getFFmpegVersion(), RNFFmpegConfig.getPlatform(), videos[0], videos[1])
+          // RNFFprobe.executeWithArguments(["-i", videos[0]]).then(result => console.log("FFprobe process exited with rc " + result.rc));
+
+          //   RNFFprobe.getMediaInformation(videos[0]).then(info => {
+          //     console.log('Result: ' + JSON.stringify(info));
+          // });
+
+          const newFilename = videos[0].split('.mp4')[0]+"-tingdddddd-.mp4";
+          const thumbnail = videos[0].split('.mp4')[0]+"-thumbnail.jpg";
+          const int1 = videos[0].split('.mp4')[0]+"-intermediate1.ts";
+          const int2 = videos[0].split('.mp4')[0]+"-intermediate2.ts";
+         
+          // const command = `-i ${videos[0]} -i ${videos[1]} -map 0:v -map 1:v -c copy ${newFilename}` 
+
+          console.log(videos[0], videos[1]);
+
+      //     const command = `-i ${videos[0]} -i ${videos[1]} -filter_complex \
+      //     "[0:v][1:v] concat=n=2:v=1 [outv]" \
+      //     -map "[outv]" ${newFilename}`
+
+      //     RNFFmpeg.execute(command).then(res => {
+      //       this.setState({
+      //         finalVideoUrl: newFilename
+      //     });
+      //  })
+
+          // RNFFmpeg.execute(`-i ${videos[0]} -i ${videos[1]} -map 0:v -map 1:v -c copy ${newFilename}`).then(res => {
+          //       this.setState({
+          //         finalVideoUrl: newFilename
+          //     });
+          // })
+
+          //  RNFFmpeg.execute(`-i ${videos[0]} -c copy -bsf:v h264_mp4toannexb -f mpegts ${int1}`).then(res => {
+
+          //    RNFFmpeg.execute(`-i ${videos[1]} -c copy -bsf:v h264_mp4toannexb -f mpegts ${int2}`).then(res => {
+
+          //      RNFFmpeg.execute(`-i "concat:${int1}|${int2}" -c copy -bsf:a aac_adtstoasc ${newFilename}`).then(res => {
+
+          //       this.setState({
+          //         finalVideoUrl: newFilename
+          //       });
+
+          //     })
+            
+
+          //   })
+
+          // })
+
+     
+          // RNFFprobe.execute(`-i ${videos[0]}`).then(result => console.log("FFprobe process exited with rc " + result.rc));
+
+          //  RNFFmpeg.executeWithArguments(["-i", `${videos[0]}`, `-c:v`, `mpeg4`, `${videos[1]}`]).then(res => {
+          //    console.log("Final file", newFilename);
+          //   this.setState({
+          //     finalVideoUrl: newFilename
+          //   });
+          //  });
+
           RNVideoEditor.merge(
             videos,
             (results) => {
               console.log("Error: " + results);
             },
-            (_, file) => {
+            (results, file) => {
+              console.log("Success : " + results + " file: " + file);
               this.setState(
                 {
                   finalVideoUrl: `file://${file}`,
                 },
                 () => {
-                  this.generateVideoFrames();
+                  console.log(
+                    "============= VIDEO READY ==============",
+                    this.state.finalVideoUrl
+                  );
+
+                  const command = `-i ${this.state.finalVideoUrl} -ss 00:00:10 -f image2 -frames:v 1 "${thumbnail}"`
+
+                  RNFFmpeg.execute(command).then(res => {
+                    this.setState({
+                      finalVideoThumb: [thumbnail]
+                    })
+                     RNFFprobe.getMediaInformation(thumbnail).then(info => {
+                      console.log('THUMB esult: ' + JSON.stringify(info));
+                     })
+                  })
+
+                //   RNFFprobe.getMediaInformation(this.state.finalVideoUrl).then(info => {
+                //     console.log('Result: ' + JSON.stringify(info));
+                //     console.log('Media Information');
+                //     console.log('Path: ' + info.path);
+                //     console.log('Format: ' + info.format);
+                //     console.log('Duration: ' + info.duration);
+                //     console.log('Start time: ' + info.startTime);
+                //     console.log('Bitrate: ' + info.bitrate);
+                //     if (info.streams) {
+                //         for (var i = 0; i < info.streams.length; i++) {
+                //             console.log('Stream id: ' + info.streams[i].index);
+                //             console.log('Stream type: ' + info.streams[i].type);
+                //             console.log('Stream codec: ' + info.streams[i].codec);
+                //             console.log('Stream full codec: ' + info.streams[i].fullCodec);
+                //             console.log('Stream format: ' + info.streams[i].format);
+                //             console.log('Stream full format: ' + info.streams[i].fullFormat);
+                //             console.log('Stream width: ' + info.streams[i].width);
+                //             console.log('Stream height: ' + info.streams[i].height);
+                //             console.log('Stream bitrate: ' + info.streams[i].bitrate);
+                //             console.log('Stream sample rate: ' + info.streams[i].sampleRate);
+                //             console.log('Stream sample format: ' + info.streams[i].sampleFormat);
+                //             console.log('Stream channel layout: ' + info.streams[i].channelLayout);
+                //             console.log('Stream sar: ' + info.streams[i].sampleAspectRatio);
+                //             console.log('Stream dar: ' + info.streams[i].displayAspectRatio);
+                //             console.log('Stream average frame rate: ' + info.streams[i].averageFrameRate);
+                //             console.log('Stream real frame rate: ' + info.streams[i].realFrameRate);
+                //             console.log('Stream time base: ' + info.streams[i].timeBase);
+                //             console.log('Stream codec time base: ' + info.streams[i].codecTimeBase);
+                            
+                //             if (info.streams[i].metadata) {
+                //                 console.log('Stream metadata encoder: ' + info.streams[i].metadata.encoder);
+                //                 console.log('Stream metadata rotate: ' + info.streams[i].metadata.rotate);
+                //                 console.log('Stream metadata creation time: ' + info.streams[i].metadata.creation_time);
+                //                 console.log('Stream metadata handler name: ' + info.streams[i].metadata.handler_name);
+                //             }
+                
+                //             if (info.streams[i].sidedata) {
+                //                 console.log('Stream side data displaymatrix: ' + info.streams[i].sidedata.displaymatrix);
+                //             }
+                //         }
+                //     }
+                // });
                 }
               );
-              // this.processFinalVideo(`file://${file}`);
             }
           );
         } catch (e) {
           console.log("Error", e);
         }
       } else {
-        this.setState(
-          {
-            finalVideoUrl: videos[0],
-          },
-          () => {
-            this.generateVideoFrames();
-          }
-        );
-        // this.processFinalVideo(videos[0]);
+        this.setState({
+          finalVideoUrl: videos[0],
+        });
       }
     }, 250);
   };
@@ -521,8 +614,8 @@ class RDScreen extends PureComponent {
       }
       this.camera
         .recordAsync({
-          quality: RNCamera.Constants.VideoQuality["1080p"],
-          targetBitrate: 1000 * 1000 * 40, // 5 Mbps
+          quality: RNCamera.Constants.VideoQuality['1080p'],
+          targetBitrate: 1000*1000*40 // 5 Mbps
         })
         .then((data) => {
           let { recordedData } = this.state;
@@ -612,7 +705,7 @@ class RDScreen extends PureComponent {
       progress: 0,
       recordedData: [],
       finalVideoUrl: null,
-      videoReady: false,
+      videoReady: false
     });
   };
 
@@ -664,53 +757,8 @@ class RDScreen extends PureComponent {
   };
 
   render() {
-    const {
-      cameraZoom,
-      videoReady,
-      isRecording,
-      cameraType,
-      flashMode,
-      recordedVideoTime,
-      finalVideoThumbPath,
-      finalVideoCurrentTime,
-      nonCollidingMultiSliderValue,
-    } = this.state;
-
     const onProgress = (data) => {
-      // console.log("Progess", data, this.camera.isRecording);
-    };
-
-    const renderZoomStyles = (zoom) => {
-      return cameraZoom === zoom
-        ? [styles.zoomControlOption, styles.zoomControlOptionActive]
-        : styles.zoomControlOption;
-    };
-
-    const renderThumbnails = () => {
-      const thumbs = [];
-      for (let idx = 1; idx <= recordedVideoTime; idx++) {
-        thumbs.push(
-          <TouchableOpacity
-            key={`video-thumb-${idx}`}
-            onPress={() => {
-              this.setState(
-                {
-                  finalVideoCurrentTime: idx,
-                },
-                () => {
-                  console.log(finalVideoCurrentTime);
-                }
-              );
-            }}
-          >
-            <Image
-              source={{ uri: `${finalVideoThumbPath}${idx}.jpg` }}
-              style={styles.videoThumb}
-            />
-          </TouchableOpacity>
-        );
-      }
-      return thumbs;
+      console.log("Progess", data, this.camera.isRecording);
     };
 
     return (
@@ -721,25 +769,20 @@ class RDScreen extends PureComponent {
         >
           <Image source={Back} style={styles.miniIcon} />
         </TouchableOpacity>
-
-        {!videoReady && (
+        {!this.state.videoReady && (
           <RNCamera
             ref={(ref) => {
               this.camera = ref;
             }}
-            useNativeZoom={true}
-            zoom={cameraZoom}
             style={styles.preview}
-            type={cameraType}
-            flashMode={flashMode}
+            type={this.state.cameraType}
+            flashMode={this.state.flashMode}
             captureAudio={false}
             onProgress={onProgress}
             onRecordingEnd={this.onRecordingEnd.bind(this)}
             quality={"720p"}
             codec={"H264"}
             birtate="40000"
-            exposure={1}
-            faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate} // Need to test
             androidCameraPermissionOptions={{
               title: "Permission to use camera",
               message: "We need your permission to use your camera",
@@ -756,40 +799,6 @@ class RDScreen extends PureComponent {
         )}
 
         {this.renderTimer()}
-
-        <View style={styles.zoomControls}>
-          <TouchableOpacity
-            style={renderZoomStyles(0)}
-            onPress={() => this.selectZoom(0)}
-          >
-            <Text style={styles.zoomControlOptionText}>1x</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={renderZoomStyles(0.25)}
-            onPress={() => this.selectZoom(0.25)}
-          >
-            <Text style={styles.zoomControlOptionText}>1.25x</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={renderZoomStyles(0.5)}
-            onPress={() => this.selectZoom(0.5)}
-          >
-            <Text style={styles.zoomControlOptionText}>1.5x</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={renderZoomStyles(0.7)}
-            onPress={() => this.selectZoom(0.75)}
-          >
-            <Text style={styles.zoomControlOptionText}>1.75x</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={renderZoomStyles(1)}
-            onPress={() => this.selectZoom(1)}
-          >
-            <Text style={styles.zoomControlOptionText}>2x</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.bottomControls}>
           {(this.state.recorded || this.state.pause) && (
             <TouchableOpacity
@@ -845,70 +854,62 @@ class RDScreen extends PureComponent {
           )}
         </View>
 
-        {!isRecording && (
-          <View style={styles.otherOptions}>
-            <TouchableOpacity
-              style={[styles.iconContainer, styles.songIcon]}
-              onPress={this.openGallery.bind(this)}
-            >
-              <Image source={Gallery} style={styles.otherOptionsIcon} />
-            </TouchableOpacity>
+        <View style={styles.otherOptions}>
+          <TouchableOpacity
+            style={[styles.iconContainer, styles.songIcon]}
+            onPress={this.openGallery.bind(this)}
+          >
+            <Image source={Gallery} style={styles.otherOptionsIcon} />
+          </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.iconContainer, styles.swapCamera]}
-              onPress={this.toggleCamera.bind(this)}
-            >
-              <Image source={SwapCamera} style={styles.otherOptionsIcon} />
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.iconContainer, styles.swapCamera]}
+            onPress={this.toggleCamera.bind(this)}
+          >
+            <Image source={SwapCamera} style={styles.otherOptionsIcon} />
+          </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[
-                styles.iconContainer,
-                styles.songIcon,
-                {
-                  backgroundColor: this.state.selectedSong
-                    ? "#FF544D"
-                    : "rgba(32,32,32,0.69)",
-                },
-              ]}
-              onPress={this._toggleSongPicker.bind(this)}
-            >
-              {this.state.selectedSong ? (
-                <Animated.Image
-                  style={[
-                    styles.otherOptionsIcon,
-                    { transform: [{ rotate: this.spin }] },
-                  ]}
-                  source={Song}
-                />
-              ) : (
-                <Image source={Song} style={styles.otherOptionsIcon} />
-              )}
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.iconContainer, styles.songIcon]}
-              onPress={() => this.toggleTorch()}
-            >
-              <Image
-                source={
-                  this.state.flashMode === RNCamera.Constants.FlashMode.off
-                    ? Flash
-                    : FlashOff
-                }
-                style={styles.otherOptionsIcon}
+          <TouchableOpacity
+            style={[styles.iconContainer, styles.songIcon, {
+              backgroundColor: this.state.selectedSong ? '#FF544D' : 'rgba(32,32,32,0.69)'
+            }]}
+            onPress={this._toggleSongPicker.bind(this)}
+          >
+            {this.state.selectedSong ? (
+              <Animated.Image
+                style={[
+                  styles.otherOptionsIcon,
+                  { transform: [{ rotate: this.spin }] },
+                ]}
+                source={Song}
               />
-            </TouchableOpacity>
+            ) : (
+              <Image source={Song} style={styles.otherOptionsIcon} />
+            )}
+          </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.iconContainer, styles.songIcon]}>
-              <Image source={Timer} style={styles.otherOptionsIcon} />
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.iconContainer, styles.songIcon]}
+            onPress={() => this.toggleTorch()}
+          >
+            <Image
+              source={
+                this.state.flashMode === RNCamera.Constants.FlashMode.off
+                  ? Flash
+                  : FlashOff
+              }
+              style={styles.otherOptionsIcon}
+            />
+          </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.iconContainer, styles.songIcon]}>
-              <Image source={More} style={styles.otherOptionsIcon} />
-            </TouchableOpacity>
-          </View>
-        )}
+          <TouchableOpacity style={[styles.iconContainer, styles.songIcon]}>
+            <Image source={Timer} style={styles.otherOptionsIcon} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.iconContainer, styles.songIcon]}>
+            <Image source={More} style={styles.otherOptionsIcon} />
+          </TouchableOpacity>
+        </View>
 
         {this.state.showSongPicker && (
           <Animated.View
@@ -941,7 +942,7 @@ class RDScreen extends PureComponent {
           this.state.recordedData.length > 0 &&
           this.state.videoReady && (
             <View style={styles.videoFinalContainer}>
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 style={[
                   styles.iconContainer,
                   styles.backIconContainer,
@@ -950,19 +951,18 @@ class RDScreen extends PureComponent {
                 onPress={() => this.setState({ videoReady: false })}
               >
                 <Image source={Back} style={styles.backIcon} />
-              </TouchableOpacity> */}
+              </TouchableOpacity>
 
               {this.state.finalVideoUrl && this.state.finalVideoUrl.length > 5 && (
                 <Video
                   source={{ uri: this.state.finalVideoUrl }}
                   muted={false}
-                  repeat={true}
-                  controls={false}
-                  currentTime={finalVideoCurrentTime}
-                  seek={finalVideoCurrentTime}
+                  repeat={false}
+                  controls={true}
                   resizeMode={"contain"}
                   rate={1}
-                  filter={FilterType.TONAL}
+                  
+                  filter={FilterType.SEPIA}
                   paused={false}
                   ignoreSilentSwitch={"obey"}
                   style={{
@@ -970,57 +970,6 @@ class RDScreen extends PureComponent {
                     width: "100%",
                   }}
                 />
-              )}
-
-              <View style={styles.videoWatermark}>
-                <Image source={Logo} style={styles.watermarkLogo} />
-                <Text style={styles.watermarkText}>KrishCdbry</Text>
-              </View>
-
-              {this.state.finalVideoThumbPath && (
-                <View style={styles.thumbSlider}>
-                  <View style={styles.thumbSliderSlide}>
-                    <MultiSlider
-                      values={[
-                        nonCollidingMultiSliderValue[0],
-                        nonCollidingMultiSliderValue[1],
-                      ]}
-                      style={{
-                        width: "100%",
-                        opacity: 0.2,
-                        height: 100,
-                        paddingHorizontal: 15,
-                      }}
-                      sliderLength={screenDimensions.ScreenWidth - 45}
-                      onValuesChange={(val) =>
-                        this.setState({
-                          finalVideoCurrentTime:
-                            finalVideoCurrentTime === val[0] ? val[1] : val[0],
-                          nonCollidingMultiSliderValue: val,
-                        })
-                      }
-                      trackStyle={{
-                        opacity: 0,
-                      }}
-                      min={0}
-                      max={recordedVideoTime}
-                      step={1}
-                      allowOverlap={false}
-                      snapped
-                      minMarkerOverlapDistance={50}
-                      customMarker={(e) => (
-                        <View
-                          style={styles.customMarkerStyle}
-                          currentValue={e.currentValue}
-                        />
-                      )}
-                    />
-                  </View>
-
-                  <View style={styles.thumbSliderThumbs}>
-                    {renderThumbnails()}
-                  </View>
-                </View>
               )}
             </View>
           )}
@@ -1231,107 +1180,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  zoomControls: {
-    position: "absolute",
-    right: 30,
-    bottom: 200,
-    width: 50,
-    paddingVertical: 12,
-    backgroundColor: "rgba(0,0,0,0.1)",
-    display: "flex",
-    justifyContent: "space-around",
-    alignItems: "center",
-    flexDirection: "column",
-    borderRadius: 50,
-  },
-  zoomControlOption: {
-    margin: 5,
-    width: 35,
-    height: 35,
-    borderRadius: 100,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  zoomControlOptionText: {
-    color: "#fff",
-    fontSize: 13,
-  },
-  zoomControlOptionActive: {
-    backgroundColor: "#202020",
-  },
-  thumbSlider: {
-    position: "absolute",
-    zIndex: 10000,
-    elevation: 5,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 120,
-    width: screenDimensions.ScreenWidth,
-    paddingHorizontal: 15,
-    backgroundColor: "#202020",
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  videoThumb: {
-    width: 40,
-    height: 90,
-    marginHorizontal: 1,
-    borderRadius: 9,
-    resizeMode: "cover",
-  },
-  videoWatermark: {
-    position: "absolute",
-    top: 15,
-    left: 15,
-    ...CommonStyles.flex,
-  },
-  watermarkLogo: {
-    height: 55,
-    width: 55,
-    zIndex: 1000,
-    resizeMode: "contain",
-  },
-  watermarkText: {
-    fontSize: 13,
-    marginVertical: 5,
-    fontFamily: "Capriola-Regular",
-    color: "#fff",
-    color: "#fff",
-    textAlign: "center",
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
-  },
-  customMarkerStyle: {
-    height: 85,
-    width: 5,
-    backgroundColor: "#ddd",
-    color: "#ddd",
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 9,
-  },
-  thumbSliderSlide: {
-    width: screenDimensions.ScreenWidth - 40,
-    position: "absolute",
-    left: 13,
-    zIndex: 200,
-    opacity: 1,
-    height: 100,
-    top: 35,
-    paddingHorizontal: 10,
-  },
-  thumbSliderThumbs: {
-    width: screenDimensions.ScreenWidth - 40,
-    paddingHorizontal: 10,
-    overflow: "hidden",
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "row",
-  },
+  // iconContainer: {
+  //   margin: 16,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
 });
 
 export default RDScreen;

@@ -1,0 +1,270 @@
+import React, { useState, useEffect } from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Dimensions,
+  Animated,
+  Easing,
+  TouchableHighlight,
+} from "react-native";
+import Video, { FilterType } from "react-native-video";
+import Swiper from "react-native-swiper";
+
+import DeviceInfo from "react-native-device-info";
+
+import icon from "../../../../assets/images/logom.png";
+import thumb from "../../../../assets/images/thumb.jpg";
+import thumb1 from "../../../../assets/images/thumb1.jpg";
+import thumb2 from "../../../../assets/images/thumb2.jpg";
+
+const clip0 = require("../../../../assets/clips/splash0.mp4");
+const clip1 = require("../../../../assets/clips/splash1.mp4");
+const clip2 = require("../../../../assets/clips/splash2.mp4");
+const clip3 = require("../../../../assets/clips/splash3.mp4");
+
+const ScreenWidth = Dimensions.get("window").width;
+const ScreenHeight = Dimensions.get("window").height;
+// let vdeos = [clip0, clip1, clip2, clip3];
+// const videosLength = videos.length;
+
+const videos = ['https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_37268_fashionTVbZskUlsTg3Lyh1yEzWmSzCCc9iiaA61560452179.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_25922_rinacdbryYqjHHCQIDyi1mxQGsYYdo9uSGx4m9y1513732329.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_39070_MemeStudiopZL86TxcQf4uboI1oLMxI7fUwVHr2x1562492912.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_39287_rinacdbryKxrZmCn49jct23Scekvi5rqHYdEaby1562746691.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_34621_rakeshNandu2mXJgxr1fIWTPvVpdeapTuoX9DqFyT1555926171.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_40395_fashionTVu89bNoEJjRggATdFfrwfl5UnUaySKz1564000894.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_34465_rakeshNanduip6B4zGNFAF2Qo472isSOz156Q7oTV1555759233.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_Padda_Paparao_17835_Padda_PaparaoWA5E0xeScIWdpAsTr7G1PNnZ16xZBe1500264285.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_20324_Padda_PaparaopHe3WcTzcbIUZ1AZrpg7St2At3tR0u1501299263.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_37888_DhruvJ8ngAVOA3un7O32p9Iti8gPMz9Arrc1560961579.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_40188_DhruvdOiB5j4HoT0AsIR20jcUa81g36zAPn1563487801.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_27240_rinacdbryMy8z21hfJ8iHIqiddjlM6BYzmgijzO1523229105.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_36518_PavanKumarPatruni6Smw9fh3k3i2UAGu7BQY1XTX1iYEEH1558390434.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_38084_Srinivas_NBtj0T7qsHMnVO4YSDNKxEcyLYF6Nnj1561143200.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_24575_chandu_ivaturiIlKRNgWruUyX74vnRjdMGIB615TPp41507561653.mp4']
+    
+
+const TvTab = ({navigation}) => {
+  const [activeVideo, setActiveVideo] = useState(0);
+  // const [videos, setVideos] = useState([])
+
+  const fetchVideos = async () => {
+    // const result = await fetch('https://live-api.heartynote.com/public/trending')
+    // const resultData = await result.json()
+    // const videos = resultData?.response?.hearty_user_trending_feed?.hearty_note_feed;
+    setVideos(['https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_37268_fashionTVbZskUlsTg3Lyh1yEzWmSzCCc9iiaA61560452179.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_25922_rinacdbryYqjHHCQIDyi1mxQGsYYdo9uSGx4m9y1513732329.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_39070_MemeStudiopZL86TxcQf4uboI1oLMxI7fUwVHr2x1562492912.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_39287_rinacdbryKxrZmCn49jct23Scekvi5rqHYdEaby1562746691.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_34621_rakeshNandu2mXJgxr1fIWTPvVpdeapTuoX9DqFyT1555926171.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_40395_fashionTVu89bNoEJjRggATdFfrwfl5UnUaySKz1564000894.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_34465_rakeshNanduip6B4zGNFAF2Qo472isSOz156Q7oTV1555759233.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_Padda_Paparao_17835_Padda_PaparaoWA5E0xeScIWdpAsTr7G1PNnZ16xZBe1500264285.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_20324_Padda_PaparaopHe3WcTzcbIUZ1AZrpg7St2At3tR0u1501299263.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_37888_DhruvJ8ngAVOA3un7O32p9Iti8gPMz9Arrc1560961579.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_40188_DhruvdOiB5j4HoT0AsIR20jcUa81g36zAPn1563487801.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_27240_rinacdbryMy8z21hfJ8iHIqiddjlM6BYzmgijzO1523229105.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_36518_PavanKumarPatruni6Smw9fh3k3i2UAGu7BQY1XTX1iYEEH1558390434.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_38084_Srinivas_NBtj0T7qsHMnVO4YSDNKxEcyLYF6Nnj1561143200.mp4',
+    'https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_videos/heartynote_media_video_24575_chandu_ivaturiIlKRNgWruUyX74vnRjdMGIB615TPp41507561653.mp4']
+    );
+    console.log(videos.length);
+  }
+
+  useEffect(() => {
+    // fetchVideos()
+  }, [])
+
+
+  const onIndexChanged = () => {
+    console.log("ACTIVE INDEX", activeIndex);
+    let activeIndex = activeVideo + 1;
+    if (activeVideo === videos.length - 1) {
+      activeIndex = 0;
+    }
+    console.log("ACTIVE INDEX", activeIndex);
+    setActiveVideo(activeIndex);
+  };
+
+  const onNotifyMe = () => {};
+
+  console.log("VIDEOS LOADER", videos.length)
+
+  return (
+    // <SafeAreaView style={styles.container}>
+      <Swiper
+        style={styles.wrLandingScreener}
+        horizontal={false}
+        showsPagination={false}
+        onMomentumScrollEnd={onIndexChanged}
+        loadMinimal={true}
+      >
+        { videos && videos.length > 0 && videos.map((item, idx) => {
+          console.log(item.src);
+          if (item) {
+              return (
+                  <Video
+                    key={idx}
+                    source={{uri: item}}
+                    muted={true}
+                    repeat={true}
+                    resizeMode={"cover"}
+                    rate={1}
+                    filter={FilterType.SEPIA}
+                    paused={activeVideo !== idx}
+                    ignoreSilentSwitch={"obey"}
+                    style={styles.clip}
+                  />
+              );
+            }
+        })}
+      </Swiper>
+    // </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: ScreenHeight,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  descContainer: {
+    marginLeft: 20,
+  },
+  desc: {
+    fontSize: 42,
+    color: "#fff",
+    fontFamily: "Capriola-Regular",
+    fontWeight: "400",
+  },
+  thumbs: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 40,
+    marginTop: 30,
+  },
+  thumbnail: {
+    width: 38,
+    height: 38,
+    resizeMode: "cover",
+    borderRadius: 200,
+    margin: 0 - 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 12 },
+    shadowRadius: 10,
+  },
+  logoContainer: {
+    width: 90,
+    height: 70,
+    borderRadius: 30,
+    marginLeft: 30,
+    marginBottom: 25,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    // backgroundColor: "#ccc"
+  },
+  logoAnimate: {
+    top: 0,
+  },
+  notif: {
+    position: "absolute",
+    top: 80,
+    right: 50,
+    backgroundColor: "#22a0ce",
+    borderRadius: 15,
+    paddingVertical: 3,
+    paddingHorizontal: 7,
+    color: "#fff",
+  },
+  logo: {
+    height:72,
+    resizeMode: "contain",
+  },
+  titleContainer: {
+    position: "absolute",
+    top: 35,
+    right: 30,
+  },
+  titleText: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#fff",
+    marginVertical: 15,
+    fontFamily: "Capriola-Regular",
+    fontWeight: "400",
+  },
+  notifyContainer: {
+    backgroundColor: "#FF544D",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    width: 120,
+    borderRadius: 120,
+    position: "absolute",
+    bottom: 50,
+    right: 30,
+    borderColor: "#191919",
+    elevation: 50,
+    shadowColor: "#fff",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.5,
+    shadowRadius: 70,
+    elevation: 50,
+  },
+  notifyButtonText: {
+    fontSize: 15,
+    color: "#fff",
+    fontFamily: "Capriola-Regular",
+    fontWeight: "400",
+  },
+  view: {
+    // backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: "rgba(0,0,0,0.45)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    flexDirection: "column",
+    position: "absolute",
+    zIndex: 1,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    top: 0,
+    width: ScreenWidth,
+    paddingTop: 30,
+    paddingBottom: 20,
+  },
+  wrLandingScreener: {},
+  clip: {
+    flex: 1,
+    backgroundColor: "#000000",
+  },
+  waitinglistCount: {
+    marginTop: 20,
+    marginLeft: 35,
+    fontFamily: "Capriola-Regular",
+  },
+  count: {
+    color: "#fff",
+    fontSize: 24,
+  },
+  countText: {
+    color: "#fff",
+    fontSize: 18,
+    fontFamily: "Capriola-Regular",
+  },
+});
+
+export default TvTab;
