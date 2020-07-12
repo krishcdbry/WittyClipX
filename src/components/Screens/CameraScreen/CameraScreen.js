@@ -353,7 +353,7 @@ class RDScreen extends PureComponent {
   generateVideoFrames = () => {
     const { finalVideoUrl } = this.state;
     RNFFmpeg.execute(
-      `-i ${finalVideoUrl} -r 1 -vf scale=350:-1 ${finalVideoUrl}_thumb_%01d.jpg`
+      `-i ${finalVideoUrl} -r 1 -vf scale=250:-1 ${finalVideoUrl}_thumb_%01d.jpg`
     ).then(
       (res) => {
         console.log("Execute result", res);
@@ -690,24 +690,24 @@ class RDScreen extends PureComponent {
       const thumbs = [];
       for (let idx = 1; idx <= recordedVideoTime; idx++) {
         thumbs.push(
-          <TouchableOpacity
+          <View
             key={`video-thumb-${idx}`}
-            onPress={() => {
-              this.setState(
-                {
-                  finalVideoCurrentTime: idx,
-                },
-                () => {
-                  console.log(finalVideoCurrentTime);
-                }
-              );
-            }}
+            // onPress={() => {
+            //   this.setState(
+            //     {
+            //       finalVideoCurrentTime: idx,
+            //     },
+            //     () => {
+            //       console.log(finalVideoCurrentTime);
+            //     }
+            //   );
+            // }}
           >
             <Image
               source={{ uri: `${finalVideoThumbPath}${idx}.jpg` }}
               style={styles.videoThumb}
             />
-          </TouchableOpacity>
+          </View>
         );
       }
       return thumbs;
@@ -738,7 +738,7 @@ class RDScreen extends PureComponent {
             quality={"720p"}
             codec={"H264"}
             birtate="40000"
-            exposure={1}
+            // exposure={1}
             faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate} // Need to test
             androidCameraPermissionOptions={{
               title: "Permission to use camera",
@@ -986,12 +986,11 @@ class RDScreen extends PureComponent {
                         nonCollidingMultiSliderValue[1],
                       ]}
                       style={{
-                        width: "100%",
+                        width: '100%',
                         opacity: 0.2,
-                        height: 100,
-                        paddingHorizontal: 15,
+                        paddingHorizontal: 17,
                       }}
-                      sliderLength={screenDimensions.ScreenWidth - 45}
+                      sliderLength={screenDimensions.ScreenWidth - 65}
                       onValuesChange={(val) =>
                         this.setState({
                           finalVideoCurrentTime:
@@ -1002,6 +1001,7 @@ class RDScreen extends PureComponent {
                       trackStyle={{
                         opacity: 0,
                       }}
+                      height={80}
                       min={0}
                       max={recordedVideoTime}
                       step={1}
@@ -1021,7 +1021,7 @@ class RDScreen extends PureComponent {
                     {renderThumbnails()}
                   </View>
                 </View>
-              )}
+               )} 
             </View>
           )}
       </View>
@@ -1262,7 +1262,7 @@ const styles = StyleSheet.create({
   },
   thumbSlider: {
     position: "absolute",
-    zIndex: 10000,
+    zIndex: 1000,
     elevation: 5,
     bottom: 0,
     left: 0,
@@ -1315,14 +1315,14 @@ const styles = StyleSheet.create({
     borderRadius: 9,
   },
   thumbSliderSlide: {
-    width: screenDimensions.ScreenWidth - 40,
+    width: '100%',
     position: "absolute",
     left: 13,
-    zIndex: 200,
+    zIndex: 2000,
     opacity: 1,
     height: 100,
-    top: 35,
-    paddingHorizontal: 10,
+    top: 9,
+    paddingHorizontal: 15,
   },
   thumbSliderThumbs: {
     width: screenDimensions.ScreenWidth - 40,
