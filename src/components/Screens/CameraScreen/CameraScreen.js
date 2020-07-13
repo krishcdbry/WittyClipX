@@ -17,7 +17,7 @@ import {
   PermissionsAndroid,
   DeviceEventEmitter,
 } from "react-native";
-import MultiSlider from "@ptomasroos/react-native-multi-slider";
+import MultiSlider from "../../../plugins/MultiSlider";
 import { RNCamera } from "react-native-camera";
 import ImagePicker from "react-native-image-picker";
 import Video, { FilterType } from "react-native-video";
@@ -52,12 +52,13 @@ import { screenDimensions } from "../../../utils/global";
 import CommonStyles from "../../../styles/common";
 import SongsList from "../../../components/SongsList/SongsList";
 
-class RDScreen extends PureComponent {
+class CameraScreeen extends PureComponent {
   constructor(props) {
     super(props);
 
     const maxOpacity = 0.25;
     this.state = {
+      permissionsGranted: false,
       progress: 0,
       isRecording: false,
       recorded: false,
@@ -82,6 +83,7 @@ class RDScreen extends PureComponent {
       songs: [],
       selectedSong: null,
       finalVideoThumbPath: null,
+      finalVideoPaused: false,
       nonCollidingMultiSliderValue: [0, 100],
     };
 
@@ -97,22 +99,22 @@ class RDScreen extends PureComponent {
     this.stopCapture = this.stopCapture.bind(this);
     this.songSelected = this.songSelected.bind(this);
     this.selectZoom = this.selectZoom.bind(this);
+    this.processFinalVideo = this.processFinalVideo.bind(this);
   }
 
   componentDidMount() {
-    console.log("PATH ---------------", RNFS.DocumentDirectoryPath);
-
     this.setState({
       width: screenDimensions.ScreenWidth / 2,
     });
     requestMultiple([
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
       PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      PERMISSIONS.ANDROID.CAMERA,
+      PERMISSIONS.ANDROID.RECORD_AUDIO,
     ]).then((result) => {
-      console.log("Results - ", result);
-      //  this.setState({
-      //    permissionsEnabled: true
-      //  })
+        this.setState({
+          permissionsGranted: true
+        })
     });
   }
 
@@ -329,9 +331,9 @@ class RDScreen extends PureComponent {
     }
   };
 
-  savePicture = async (uri) => {
+  saveVideo = async (uri) => {
     if (Platform.OS === "android") {
-      await this.requestExternalStoragePermission();
+      await this.checkAndroidPermission();
       console.log("THEN SAVING");
       CameraRoll.save(uri).then(
         (res) => {
@@ -367,8 +369,12 @@ class RDScreen extends PureComponent {
     );
   };
 
-  processFinalVideo = async (file) => {
-    const finalVideoUrl = file;
+  processFinalVideo = async () => {
+    const { finalVideoUrl, recordedVideoTime } = this.state;
+    let { selectedSong } = this.state;
+    if (selectedSong && selectedSong.path) {
+      selectedSong = `file://${selectedSong.path.trim().replace(/ /g,"%20")}`
+    }
 
     // Generating watermark
     const watermark = "logom.png";
@@ -382,17 +388,22 @@ class RDScreen extends PureComponent {
         // Output file
         const finalFileWithWatermark = this.generateFinalVideoOutputFile();
 
-        const command = `-i ${finalVideoUrl} -i ${watermarkAbsolutePath}\
-               -qscale:v 18 -pix_fmt yuv420p -c:a aac -strict -2 \
-               -filter_complex "overlay=x=15:y=15" \
-               ${finalFileWithWatermark}`;
+        const songAndWaterMarkMixerCommand  = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} -i ${selectedSong} \
+        -filter_complex "[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[0][i]overlay=x=15:y=15:shortest=1[v]" \
+        -qscale:v 9 -pix_fmt yuv420p -c:a aac -strict -2 \
+        -map "[v]" -map 2:a -shortest  ${finalFileWithWatermark}`
 
-        const finalVideoFile = await RNFFmpeg.execute(command);
+        const waterMarkCommand  = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} \
+        -filter_complex "[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[0][i]overlay=x=15:y=15" \
+        -qscale:v 9 -pix_fmt yuv420p -c:a aac -strict -2 -shortest  ${finalFileWithWatermark}`
+
+        const finalVideoFile = await RNFFmpeg.execute(selectedSong ? songAndWaterMarkMixerCommand : waterMarkCommand);
         if (!finalVideoFile) {
           this.setState({ finalVideoUrl });
         }
         this.setState({ finalVideoUrl: finalFileWithWatermark }, () => {
           //
+          this.saveVideo(`file://${finalFileWithWatermark}`)
         });
       })
       .catch((_err) => {
@@ -400,6 +411,33 @@ class RDScreen extends PureComponent {
         this.setState({ finalVideoUrl });
       });
   };
+
+  setPreProcessedVideo = video => {
+    this.setState(
+      {
+        finalVideoUrl: video,
+      },
+      () => {
+        this.generateVideoFrames();
+
+        const {selectedSong} = this.state;
+        if (!selectedSong) return;
+
+        console.log("SONG SELECTED", selectedSong);
+
+        AudioPlayer.setTime(0);
+        AudioPlayer.play();
+        setInterval(() => {
+          this.currentAudioTimer = AudioPlayer.getCurrentTime((currentTime) => {
+            if (currentTime >= this.state.recordedVideoTime) {
+              AudioPlayer.setTime(0)
+              AudioPlayer.play()
+            }
+          });
+        }, 1000);
+      }
+    );
+  }
 
   submitVideo = async () => {
     const { isRecording } = this.state;
@@ -426,14 +464,8 @@ class RDScreen extends PureComponent {
               console.log("Error: " + results);
             },
             (_, file) => {
-              this.setState(
-                {
-                  finalVideoUrl: `file://${file}`,
-                },
-                () => {
-                  this.generateVideoFrames();
-                }
-              );
+              console.log("FILEEEEE", file);
+              this.setPreProcessedVideo(`file://${file}`)
               // this.processFinalVideo(`file://${file}`);
             }
           );
@@ -441,15 +473,7 @@ class RDScreen extends PureComponent {
           console.log("Error", e);
         }
       } else {
-        this.setState(
-          {
-            finalVideoUrl: videos[0],
-          },
-          () => {
-            this.generateVideoFrames();
-          }
-        );
-        // this.processFinalVideo(videos[0]);
+        this.setPreProcessedVideo(videos[0])
       }
     }, 250);
   };
@@ -663,17 +687,29 @@ class RDScreen extends PureComponent {
     );
   };
 
+  componentWillUnmount() {
+    const {selectedSong} = this.state;
+    if (!selectedSong) return;
+
+    if (this.currentAudioTimer) {
+      clearInterval(this.currentAudioTimer);
+    }
+    AudioPlayer.stop()
+  }
+
   render() {
     const {
       cameraZoom,
       videoReady,
       isRecording,
       cameraType,
+      selectedSong,
       flashMode,
       recordedVideoTime,
       finalVideoThumbPath,
       finalVideoCurrentTime,
       nonCollidingMultiSliderValue,
+      finalVideoPaused
     } = this.state;
 
     const onProgress = (data) => {
@@ -692,16 +728,6 @@ class RDScreen extends PureComponent {
         thumbs.push(
           <View
             key={`video-thumb-${idx}`}
-            // onPress={() => {
-            //   this.setState(
-            //     {
-            //       finalVideoCurrentTime: idx,
-            //     },
-            //     () => {
-            //       console.log(finalVideoCurrentTime);
-            //     }
-            //   );
-            // }}
           >
             <Image
               source={{ uri: `${finalVideoThumbPath}${idx}.jpg` }}
@@ -732,13 +758,13 @@ class RDScreen extends PureComponent {
             style={styles.preview}
             type={cameraType}
             flashMode={flashMode}
-            captureAudio={false}
+            captureAudio={selectedSong ? false : true}
             onProgress={onProgress}
             onRecordingEnd={this.onRecordingEnd.bind(this)}
             quality={"720p"}
             codec={"H264"}
-            birtate="40000"
-            // exposure={1}
+            birtate="30000"
+            exposure={0.5}
             faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate} // Need to test
             androidCameraPermissionOptions={{
               title: "Permission to use camera",
@@ -953,6 +979,17 @@ class RDScreen extends PureComponent {
               </TouchableOpacity> */}
 
               {this.state.finalVideoUrl && this.state.finalVideoUrl.length > 5 && (
+                <TouchableOpacity onPress={() => {
+                  this.setState({
+                    finalVideoPaused: !this.state.finalVideoPaused
+                  }, () => {
+                    if (this.state.finalVideoPaused) {
+                      AudioPlayer.pause();
+                    } else {
+                      AudioPlayer.play();
+                    }
+                  })
+                }}>
                 <Video
                   source={{ uri: this.state.finalVideoUrl }}
                   muted={false}
@@ -963,18 +1000,28 @@ class RDScreen extends PureComponent {
                   resizeMode={"contain"}
                   rate={1}
                   filter={FilterType.TONAL}
-                  paused={false}
+                  paused={finalVideoPaused}
                   ignoreSilentSwitch={"obey"}
                   style={{
                     height: "100%",
                     width: "100%",
                   }}
                 />
+                </TouchableOpacity>
               )}
 
               <View style={styles.videoWatermark}>
                 <Image source={Logo} style={styles.watermarkLogo} />
                 <Text style={styles.watermarkText}>KrishCdbry</Text>
+              </View>
+
+              <View style={styles.saveVideoButtons}>
+                <TouchableOpacity style={[styles.saveVideoButton, styles.cancelButton]}>
+                  <Text style={styles.saveVideoButtonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.saveVideoButton} onPress={this.processFinalVideo}>
+                  <Text style={styles.watermarkText}>Save</Text>
+                </TouchableOpacity>
               </View>
 
               {this.state.finalVideoThumbPath && (
@@ -991,13 +1038,14 @@ class RDScreen extends PureComponent {
                         paddingHorizontal: 17,
                       }}
                       sliderLength={screenDimensions.ScreenWidth - 65}
-                      onValuesChange={(val) =>
+                      onValuesChange={(val) => {
                         this.setState({
                           finalVideoCurrentTime:
                             finalVideoCurrentTime === val[0] ? val[1] : val[0],
                           nonCollidingMultiSliderValue: val,
                         })
-                      }
+                        AudioPlayer.setTime(val[0])
+                      }}
                       trackStyle={{
                         opacity: 0,
                       }}
@@ -1307,7 +1355,7 @@ const styles = StyleSheet.create({
   },
   customMarkerStyle: {
     height: 85,
-    width: 5,
+    width: 7,
     backgroundColor: "#ddd",
     color: "#ddd",
     borderColor: "#ddd",
@@ -1332,6 +1380,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
+  saveVideoButtons: {
+    position: 'absolute',
+    bottom: 135,
+    right: 20,
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  saveVideoButton: {
+    ...CommonStyles.flex,
+    borderRadius: 20,
+    height: 35,
+    paddingHorizontal: 15,
+    backgroundColor: '#FF544D',
+    marginHorizontal: 5,
+    shadowColor: "#fff",
+    shadowOffset: { 
+      width: 4,
+      height: 16,
+    },
+    shadowOpacity: 0.39,
+    shadowRadius: 8.3,
+    elevation: 3,
+    zIndex: 1,
+  },
+  cancelButton: {
+    backgroundColor: '#999'
+  },
+  saveVideoButtonText: {
+    color: '#fff',
+    fontSize: 13,
+    fontFamily: "Capriola-Regular",
+  }
 });
 
-export default RDScreen;
+export default CameraScreeen;

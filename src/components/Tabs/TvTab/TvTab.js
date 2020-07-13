@@ -10,6 +10,12 @@ import {
   Easing,
   TouchableHighlight,
 } from "react-native";
+import {
+  requestMultiple,
+  PERMISSIONS,
+  RESULTS,
+} from "react-native-permissions";
+
 import Video, { FilterType } from "react-native-video";
 import LinearGradient from "react-native-linear-gradient";
 
@@ -61,6 +67,14 @@ const TvTab = ({ navigation }) => {
 
   useEffect(() => {
     fetchVideos();
+    requestMultiple([
+      PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+      PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      PERMISSIONS.ANDROID.CAMERA,
+      PERMISSIONS.ANDROID.RECORD_AUDIO,
+    ]).then((result) => {
+        
+    });
   }, []);
 
   return (

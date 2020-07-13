@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import AudioPlayer from "react-native-play-audio";
 import AsyncStorage from "@react-native-community/async-storage";
-import MusicFiles from "react-native-get-music-files";
+import MusicFiles from "../../../vendor/react-native-get-music-files";
 import { screenDimensions } from "../../utils/global";
 import CommonStyles from "../../styles/common";
 
@@ -64,8 +64,8 @@ class SongsList extends PureComponent {
       fields: ["title", "albumTitle", "genre", "lyrics", "artwork", "duration", "cover"], // for iOs Version
     })
       .then((songs) => {
-        console.log("Songs --- ", songs)
         if (songs && songs.length > 0) {
+          songs = songs.filter(item => item.path)
           storeSongs(songs);
           console.log("Storing songs h ehehe")
           this.setState(
@@ -87,7 +87,6 @@ class SongsList extends PureComponent {
   }
 
   componentDidMount() {
-    this.fetchMediaFromDevice();
     try {
       AsyncStorage.getItem("songs").then((data) => {
         console.log(data);

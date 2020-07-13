@@ -9,8 +9,6 @@ import com.cinder92.musicfiles.RNReactNativeGetMusicFilesPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.RNPlayAudio.RNPlayAudioPackage;
 import org.reactnative.camera.RNCameraPackage;
-//import com.reactlibrary.RNReatNativeGetMusicFilesPackage;
-//import com.reactlibrary.RNReatNativeGetMusicFilesPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -32,7 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-//           packages.add(new RNReatNativeGetMusicFilesPackage());
+            packages.add(new RNReactNativeGetMusicFilesPackage());
           return packages;
         }
 

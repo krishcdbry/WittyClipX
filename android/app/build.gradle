@@ -237,6 +237,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation project(':react-native-get-music-files')
 }
 
 // Run this once to be able to run the application with BUCK
@@ -251,5 +253,11 @@ configurations.all {
         force 'com.facebook.soloader:soloader:0.8.2'
     }
 }
+
+//configurations {
+//    implementation {
+//        exclude group: 'com.github.wseemann', module: 'FFmpegMediaMetadataRetriever:1.0.14'
+//    }
+//}
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

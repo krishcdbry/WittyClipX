@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-//        reactNativeFFmpegPackage = "full-gpl"
+        // reactNativeFFmpegPackage = "full-gpl"
         buildToolsVersion = "29.0.2"
         minSdkVersion = 24
         compileSdkVersion = 29
