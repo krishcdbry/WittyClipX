@@ -8,6 +8,8 @@ import {
   Dimensions,
   Animated,
   Easing,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
   TouchableHighlight,
 } from "react-native";
 import {
@@ -72,42 +74,34 @@ const TvTab = ({ navigation }) => {
       PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
       PERMISSIONS.ANDROID.CAMERA,
       PERMISSIONS.ANDROID.RECORD_AUDIO,
-    ]).then((result) => {
-        
-    });
+    ]).then((result) => {});
   }, []);
 
   return (
     <Swiper
       style={styles.wrLandingScreener}
       horizontal={false}
-      // height={Dimensions.get("window").height}
       removeClippedSubviews={false}
       onIndexChanged={(idx) => activeVideoHandler(idx)}
-      // loadMinimalSize={3}
-      // loadMinimalLoader={
-      //   <View>
-      //     <Text>Loading....</Text>
-      //   </View>
-      // }
-      // loadMinimal={true}
     >
       {videos &&
         videos.length > 0 &&
         videos.map((item, idx) => {
           return (
-            <TouchableHighlight
-              key={idx}
-              onPress={() => toggleVideoPlay(idx)}
-              style={styles.clip}
-            >
-              <View style={{ position: "relative" }}>
-                <LinearGradient
-                  colors={["transparent", "#111"]}
-                  style={styles.videoWrapper}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 0, y: 1 }}
+            <View key={idx}>
+                <TouchableWithoutFeedback
+                  style={[styles.videoWrapper, styles.videoWrapperTouchable]}
+                  onPress={() => toggleVideoPlay(idx)}
                 >
+                  <LinearGradient
+                    style={styles.videoWrapper}
+                    colors={["transparent", "#111"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                  />
+                </TouchableWithoutFeedback>
+
+                <View style={styles.bottomContentContainer}>
                   <View style={styles.videoDataContainer}>
                     <View style={styles.videoUserContainer}>
                       <Image
@@ -125,10 +119,14 @@ const TvTab = ({ navigation }) => {
                         <Text style={styles.stats}>{item.views}</Text>
                       </View>
                       <View style={styles.optionIcon}>
-                        <Image
-                          source={commentIcon}
-                          style={styles.commentIcon}
-                        />
+                        <TouchableOpacity
+                          onPress={() => console.log("On pressed comment")}
+                        >
+                          <Image
+                            source={commentIcon}
+                            style={styles.commentIcon}
+                          />
+                        </TouchableOpacity>
                         <Text style={styles.stats}>{item.star.count}</Text>
                       </View>
                       <View style={styles.optionIcon}>
@@ -144,13 +142,14 @@ const TvTab = ({ navigation }) => {
                     <Image source={songIn} style={styles.songIcon} />
                     <Image source={moreOptions} style={styles.moreOptions} />
                   </View>
+                </View>
 
-                  <View style={styles.viewsContainer}>
-                    <Text style={{ color: "#fff", fontSize: 12 }}>
-                      {item.views} Views
-                    </Text>
-                  </View>
-                </LinearGradient>
+                <View style={styles.viewsContainer}>
+                  <Text style={{ color: "#fff", fontSize: 12 }}>
+                    {item.views} Views
+                  </Text>
+                </View>
+
                 <Video
                   source={{ uri: item.src }}
                   muted={false}
@@ -163,7 +162,6 @@ const TvTab = ({ navigation }) => {
                   style={styles.clip}
                 />
               </View>
-            </TouchableHighlight>
           );
         })}
     </Swiper>
@@ -196,7 +194,7 @@ const styles = StyleSheet.create({
   },
   wrLandingScreener: {
     position: "relative",
-    minHeight: screenDimensions.ScreenHeight
+    minHeight: screenDimensions.ScreenHeight,
   },
   clip: {
     flex: 1,
@@ -217,9 +215,22 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     position: "absolute",
-    zIndex: 200,
+    zIndex: 100,
     height: screenDimensions.ScreenHeight,
     width: screenDimensions.ScreenWidth,
+  },
+  videoWrapperTouchable: {
+    elevation: 1
+  },
+  bottomContentContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    height: 200,
+    right: 0,
+    width: screenDimensions.ScreenWidth,
+    elevation: 3,
+    zIndex: 300,
   },
   videoDataContainer: {
     position: "absolute",
@@ -228,6 +239,8 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "center",
+    elevation: 2,
+    zIndex: 200
   },
   videoUserContainer: {
     display: "flex",
@@ -284,6 +297,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
+    elevation: 2,
+    zIndex: 200
   },
   songIcon: {
     height: 27,
@@ -303,6 +318,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 7,
     color: "#fff",
+    elevation: 2,
   },
 });
 

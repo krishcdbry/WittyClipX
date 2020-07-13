@@ -51,8 +51,9 @@ import ProgressBar from "../../../plugins/ProgressBar";
 import { screenDimensions } from "../../../utils/global";
 import CommonStyles from "../../../styles/common";
 import SongsList from "../../../components/SongsList/SongsList";
+import ProcessingLoader from "../../../components/Loaders/ProcessingLoader";
 
-class CameraScreeen extends PureComponent {
+class RDScreen extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -85,6 +86,8 @@ class CameraScreeen extends PureComponent {
       finalVideoThumbPath: null,
       finalVideoPaused: false,
       nonCollidingMultiSliderValue: [0, 100],
+      processingFinalVideo: false,
+      finalProcessedVideoUrl: null
     };
 
     this.spinValue = new Animated.Value(0);
@@ -112,9 +115,9 @@ class CameraScreeen extends PureComponent {
       PERMISSIONS.ANDROID.CAMERA,
       PERMISSIONS.ANDROID.RECORD_AUDIO,
     ]).then((result) => {
-        this.setState({
-          permissionsGranted: true
-        })
+      this.setState({
+        permissionsGranted: true,
+      });
     });
   }
 
@@ -338,6 +341,9 @@ class CameraScreeen extends PureComponent {
       CameraRoll.save(uri).then(
         (res) => {
           console.log("Success");
+          Toast.show("Video saved to your gallery", Toast.SHORT, [
+            "UIAlertController",
+          ]);
         },
         (err) => {
           console.log("Error", err);
@@ -369,11 +375,39 @@ class CameraScreeen extends PureComponent {
     );
   };
 
+  triggerBackgroundAudio = () => {
+      this.setState({
+        finalVideoPaused: !this.state.processingFinalVideo
+      })
+
+      if (!this.state.selectedSong) return;
+
+      if (this.state.processingFinalVideo) {
+        AudioPlayer.pause();
+      } else {
+        AudioPlayer.play();
+      }
+  }
+
+  setFinalProcessedVideoState = (finalProcessedVideoUrl, saveGallery) => {
+    this.setState({ finalProcessedVideoUrl, processingFinalVideo: false }, () => {
+      this.triggerBackgroundAudio()
+      if (saveGallery) {
+        this.saveVideo(`file://${finalProcessedVideoUrl}`);
+      }
+    });
+  }
+
   processFinalVideo = async () => {
+    this.setState({
+      processingFinalVideo: true,
+    }, () => {
+      this.triggerBackgroundAudio()
+    });
     const { finalVideoUrl, recordedVideoTime } = this.state;
     let { selectedSong } = this.state;
     if (selectedSong && selectedSong.path) {
-      selectedSong = `file://${selectedSong.path.trim().replace(/ /g,"%20")}`
+      selectedSong = `file://${selectedSong.path.trim().replace(/ /g, "%20")}`;
     }
 
     // Generating watermark
@@ -388,31 +422,31 @@ class CameraScreeen extends PureComponent {
         // Output file
         const finalFileWithWatermark = this.generateFinalVideoOutputFile();
 
-        const songAndWaterMarkMixerCommand  = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} -i ${selectedSong} \
+        const songAndWaterMarkMixerCommand = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} -i ${selectedSong} \
         -filter_complex "[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[0][i]overlay=x=15:y=15:shortest=1[v]" \
         -qscale:v 9 -pix_fmt yuv420p -c:a aac -strict -2 \
-        -map "[v]" -map 2:a -shortest  ${finalFileWithWatermark}`
+        -map "[v]" -map 2:a -shortest  ${finalFileWithWatermark}`;
 
-        const waterMarkCommand  = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} \
+        const waterMarkCommand = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} \
         -filter_complex "[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[0][i]overlay=x=15:y=15" \
-        -qscale:v 9 -pix_fmt yuv420p -c:a aac -strict -2 -shortest  ${finalFileWithWatermark}`
+        -qscale:v 9 -pix_fmt yuv420p -c:a aac -strict -2 -shortest  ${finalFileWithWatermark}`;
 
-        const finalVideoFile = await RNFFmpeg.execute(selectedSong ? songAndWaterMarkMixerCommand : waterMarkCommand);
+        const finalVideoFile = await RNFFmpeg.execute(
+          selectedSong ? songAndWaterMarkMixerCommand : waterMarkCommand
+        );
         if (!finalVideoFile) {
-          this.setState({ finalVideoUrl });
+          this.setFinalProcessedVideoState(finalVideoUrl)
+          return;
         }
-        this.setState({ finalVideoUrl: finalFileWithWatermark }, () => {
-          //
-          this.saveVideo(`file://${finalFileWithWatermark}`)
-        });
+        this.setFinalProcessedVideoState(finalFileWithWatermark, true);
       })
       .catch((_err) => {
         console.log("error", _err);
-        this.setState({ finalVideoUrl });
+        this.setFinalProcessedVideoState(finalVideoUrl)
       });
   };
 
-  setPreProcessedVideo = video => {
+  setPreProcessedVideo = (video) => {
     this.setState(
       {
         finalVideoUrl: video,
@@ -420,24 +454,21 @@ class CameraScreeen extends PureComponent {
       () => {
         this.generateVideoFrames();
 
-        const {selectedSong} = this.state;
+        const { selectedSong } = this.state;
         if (!selectedSong) return;
-
-        console.log("SONG SELECTED", selectedSong);
-
         AudioPlayer.setTime(0);
         AudioPlayer.play();
-        setInterval(() => {
-          this.currentAudioTimer = AudioPlayer.getCurrentTime((currentTime) => {
+        this.currentAudioTimer = setInterval(() => {
+          AudioPlayer.getCurrentTime((currentTime) => {
             if (currentTime >= this.state.recordedVideoTime) {
-              AudioPlayer.setTime(0)
-              AudioPlayer.play()
+              AudioPlayer.setTime(0);
+              AudioPlayer.play();
             }
           });
         }, 1000);
       }
     );
-  }
+  };
 
   submitVideo = async () => {
     const { isRecording } = this.state;
@@ -465,7 +496,7 @@ class CameraScreeen extends PureComponent {
             },
             (_, file) => {
               console.log("FILEEEEE", file);
-              this.setPreProcessedVideo(`file://${file}`)
+              this.setPreProcessedVideo(`file://${file}`);
               // this.processFinalVideo(`file://${file}`);
             }
           );
@@ -473,7 +504,7 @@ class CameraScreeen extends PureComponent {
           console.log("Error", e);
         }
       } else {
-        this.setPreProcessedVideo(videos[0])
+        this.setPreProcessedVideo(videos[0]);
       }
     }, 250);
   };
@@ -688,13 +719,13 @@ class CameraScreeen extends PureComponent {
   };
 
   componentWillUnmount() {
-    const {selectedSong} = this.state;
+    const { selectedSong } = this.state;
     if (!selectedSong) return;
 
     if (this.currentAudioTimer) {
       clearInterval(this.currentAudioTimer);
     }
-    AudioPlayer.stop()
+    AudioPlayer.stop();
   }
 
   render() {
@@ -709,7 +740,8 @@ class CameraScreeen extends PureComponent {
       finalVideoThumbPath,
       finalVideoCurrentTime,
       nonCollidingMultiSliderValue,
-      finalVideoPaused
+      finalVideoPaused,
+      processingFinalVideo,
     } = this.state;
 
     const onProgress = (data) => {
@@ -726,9 +758,7 @@ class CameraScreeen extends PureComponent {
       const thumbs = [];
       for (let idx = 1; idx <= recordedVideoTime; idx++) {
         thumbs.push(
-          <View
-            key={`video-thumb-${idx}`}
-          >
+          <View key={`video-thumb-${idx}`}>
             <Image
               source={{ uri: `${finalVideoThumbPath}${idx}.jpg` }}
               style={styles.videoThumb}
@@ -741,6 +771,8 @@ class CameraScreeen extends PureComponent {
 
     return (
       <View style={styles.container}>
+        {processingFinalVideo && <ProcessingLoader />}
+
         <TouchableOpacity
           style={styles.topRightBackArrow}
           onPress={() => this.props.navigation.navigate("HomeScreen")}
@@ -791,26 +823,26 @@ class CameraScreeen extends PureComponent {
             <Text style={styles.zoomControlOptionText}>1x</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={renderZoomStyles(0.25)}
-            onPress={() => this.selectZoom(0.25)}
+            style={renderZoomStyles(0.15)}
+            onPress={() => this.selectZoom(0.15)}
           >
             <Text style={styles.zoomControlOptionText}>1.25x</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={renderZoomStyles(0.35)}
+            onPress={() => this.selectZoom(0.35)}
+          >
+            <Text style={styles.zoomControlOptionText}>1.5x</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={renderZoomStyles(0.5)}
             onPress={() => this.selectZoom(0.5)}
           >
-            <Text style={styles.zoomControlOptionText}>1.5x</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={renderZoomStyles(0.7)}
-            onPress={() => this.selectZoom(0.75)}
-          >
             <Text style={styles.zoomControlOptionText}>1.75x</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={renderZoomStyles(1)}
-            onPress={() => this.selectZoom(1)}
+            style={renderZoomStyles(0.75)}
+            onPress={() => this.selectZoom(0.75)}
           >
             <Text style={styles.zoomControlOptionText}>2x</Text>
           </TouchableOpacity>
@@ -894,7 +926,7 @@ class CameraScreeen extends PureComponent {
                 {
                   backgroundColor: this.state.selectedSong
                     ? "#FF544D"
-                    : "rgba(32,32,32,0.69)",
+                    : "rgba(32,32,32,0.72)",
                 },
               ]}
               onPress={this._toggleSongPicker.bind(this)}
@@ -979,34 +1011,40 @@ class CameraScreeen extends PureComponent {
               </TouchableOpacity> */}
 
               {this.state.finalVideoUrl && this.state.finalVideoUrl.length > 5 && (
-                <TouchableOpacity onPress={() => {
-                  this.setState({
-                    finalVideoPaused: !this.state.finalVideoPaused
-                  }, () => {
-                    if (this.state.finalVideoPaused) {
-                      AudioPlayer.pause();
-                    } else {
-                      AudioPlayer.play();
-                    }
-                  })
-                }}>
-                <Video
-                  source={{ uri: this.state.finalVideoUrl }}
-                  muted={false}
-                  repeat={true}
-                  controls={false}
-                  currentTime={finalVideoCurrentTime}
-                  seek={finalVideoCurrentTime}
-                  resizeMode={"contain"}
-                  rate={1}
-                  filter={FilterType.TONAL}
-                  paused={finalVideoPaused}
-                  ignoreSilentSwitch={"obey"}
-                  style={{
-                    height: "100%",
-                    width: "100%",
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState(
+                      {
+                        finalVideoPaused: !this.state.finalVideoPaused,
+                      },
+                      () => {
+                        if (!this.state.selectedSong) return;
+                        if (this.state.finalVideoPaused) {
+                          AudioPlayer.pause();
+                        } else {
+                          AudioPlayer.play();
+                        }
+                      }
+                    );
                   }}
-                />
+                >
+                  <Video
+                    source={{ uri: this.state.finalVideoUrl }}
+                    muted={false}
+                    repeat={true}
+                    controls={false}
+                    currentTime={finalVideoCurrentTime}
+                    seek={finalVideoCurrentTime}
+                    resizeMode={"contain"}
+                    rate={1}
+                    filter={FilterType.TONAL}
+                    paused={finalVideoPaused || processingFinalVideo}
+                    ignoreSilentSwitch={"obey"}
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                    }}
+                  />
                 </TouchableOpacity>
               )}
 
@@ -1016,10 +1054,15 @@ class CameraScreeen extends PureComponent {
               </View>
 
               <View style={styles.saveVideoButtons}>
-                <TouchableOpacity style={[styles.saveVideoButton, styles.cancelButton]}>
+                <TouchableOpacity
+                  style={[styles.saveVideoButton, styles.cancelButton]}
+                >
                   <Text style={styles.saveVideoButtonText}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.saveVideoButton} onPress={this.processFinalVideo}>
+                <TouchableOpacity
+                  style={styles.saveVideoButton}
+                  onPress={this.processFinalVideo}
+                >
                   <Text style={styles.watermarkText}>Save</Text>
                 </TouchableOpacity>
               </View>
@@ -1033,7 +1076,7 @@ class CameraScreeen extends PureComponent {
                         nonCollidingMultiSliderValue[1],
                       ]}
                       style={{
-                        width: '100%',
+                        width: "100%",
                         opacity: 0.2,
                         paddingHorizontal: 17,
                       }}
@@ -1043,8 +1086,8 @@ class CameraScreeen extends PureComponent {
                           finalVideoCurrentTime:
                             finalVideoCurrentTime === val[0] ? val[1] : val[0],
                           nonCollidingMultiSliderValue: val,
-                        })
-                        AudioPlayer.setTime(val[0])
+                        });
+                        AudioPlayer.setTime(val[0]);
                       }}
                       trackStyle={{
                         opacity: 0,
@@ -1069,7 +1112,7 @@ class CameraScreeen extends PureComponent {
                     {renderThumbnails()}
                   </View>
                 </View>
-               )} 
+              )}
             </View>
           )}
       </View>
@@ -1194,15 +1237,15 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(32,32,32,0.69)",
+    backgroundColor: "rgba(32,32,32,0.72)",
     shadowColor: "#fff",
     shadowOffset: {
-      width: 4,
-      height: 16,
+      width: 1,
+      height: 1,
     },
-    shadowOpacity: 0.39,
-    shadowRadius: 8.3,
-    elevation: 3,
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
     zIndex: 1,
   },
   songPicker: {
@@ -1363,7 +1406,7 @@ const styles = StyleSheet.create({
     borderRadius: 9,
   },
   thumbSliderSlide: {
-    width: '100%',
+    width: "100%",
     position: "absolute",
     left: 13,
     zIndex: 2000,
@@ -1381,22 +1424,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   saveVideoButtons: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 135,
     right: 20,
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
   },
   saveVideoButton: {
     ...CommonStyles.flex,
     borderRadius: 20,
     height: 35,
     paddingHorizontal: 15,
-    backgroundColor: '#FF544D',
+    backgroundColor: "#FF544D",
     marginHorizontal: 5,
     shadowColor: "#fff",
-    shadowOffset: { 
+    shadowOffset: {
       width: 4,
       height: 16,
     },
@@ -1406,13 +1449,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   cancelButton: {
-    backgroundColor: '#999'
+    backgroundColor: "#999",
   },
   saveVideoButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 13,
     fontFamily: "Capriola-Regular",
-  }
+  },
 });
 
-export default CameraScreeen;
+export default RDScreen;

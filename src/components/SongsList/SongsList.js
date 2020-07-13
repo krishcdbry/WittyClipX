@@ -23,6 +23,8 @@ import pause from "../../../assets/images/icons/pause.png";
 import select from "../../../assets/images/icons/select.png";
 import use from "../../../assets/images/icons/use.png";
 
+import DataLoader from '../Loaders/DataLoader';
+
 const storeSongs = async (value) => {
   try {
     await AsyncStorage.setItem("songs", JSON.stringify(value));
@@ -36,7 +38,7 @@ class SongsList extends PureComponent {
     super(props);
 
     this.state = {
-      isLoading: true,
+      loading: true,
       searchSongValue: "",
       songs: [],
       selectedSong: null,
@@ -67,12 +69,11 @@ class SongsList extends PureComponent {
         if (songs && songs.length > 0) {
           songs = songs.filter(item => item.path)
           storeSongs(songs);
-          console.log("Storing songs h ehehe")
           this.setState(
             {
               songs,
               filteredSongs: songs,
-              isLoading: false
+              loading: false
             },
             () => {
               console.log(songs.length);
@@ -89,7 +90,6 @@ class SongsList extends PureComponent {
   componentDidMount() {
     try {
       AsyncStorage.getItem("songs").then((data) => {
-        console.log(data);
         if (data) {
           const songs = JSON.parse(data);
           this.setState({
@@ -252,16 +252,18 @@ class SongsList extends PureComponent {
 
           {
               this.state.filteredSongs.length == 0 && !this.state.loading && (
-                  <View>
-                      <Text>No Songs</Text>
+                  <View style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginVertical: 72 }}> 
+                      <Text style={{color: '#ddd'}}>No Songs !!</Text>
                   </View>
               )
           }
 
           {
               this.state.loading && (
-                  <View>
-                    <Text>Loading ....</Text>
+                  <View style={{
+                    marginVertical: 72
+                  }}>
+                    <DataLoader loadingText={"Fetching songs"}/>
                   </View>
               )
           }
