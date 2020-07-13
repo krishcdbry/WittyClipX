@@ -134,8 +134,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         missingDimensionStrategy 'react-native-camera', 'general'
         multiDexEnabled true
-        versionCode 7
-        versionName "0.2.3"
+        versionCode 8
+        versionName "0.2.4"
     }
     splits {
         abi {
@@ -204,7 +204,7 @@ android {
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
-                        versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
+                        versionCodes.get(abi) * 1572574 + defaultConfig.versionCode
             }
 
         }

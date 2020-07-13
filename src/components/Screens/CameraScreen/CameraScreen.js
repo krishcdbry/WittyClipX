@@ -25,7 +25,6 @@ import RNVideoEditor from "react-native-video-editor";
 import Toast from "react-native-simple-toast";
 import AudioPlayer from "react-native-play-audio";
 import RNFS from "react-native-fs";
-import FileViewer from "react-native-file-viewer";
 
 import {
   requestMultiple,
@@ -54,7 +53,7 @@ import SongsList from "../../../components/SongsList/SongsList";
 import ProcessingLoader from "../../../components/Loaders/ProcessingLoader";
 import FinalProcessedVideo from "../../../components/FinalProcessedVideo/FinalProcessedVideo";
 
-class CameraScreen extends PureComponent {
+class RDScreen extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -89,6 +88,8 @@ class CameraScreen extends PureComponent {
       nonCollidingMultiSliderValue: [0, 100],
       processingFinalVideo: false,
       finalProcessedVideoUrl: null,
+      faceObjectX: -1,
+      faceObjectY: -1,
     };
 
     this.spinValue = new Animated.Value(0);
@@ -332,37 +333,6 @@ class CameraScreen extends PureComponent {
     );
   }
 
-  checkAndroidPermission = async () => {
-    try {
-      console.log("ASKING PERMISSIONS");
-      const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-      PermissionsAndroid.request(permission).then((res) => {
-        console.log("ASKING PERMISSIONS RESOLVING", res);
-        Promise.resolve();
-      });
-    } catch (error) {
-      Promise.reject(error);
-    }
-  };
-
-  saveVideo = async (uri) => {
-    if (Platform.OS === "android") {
-      await this.checkAndroidPermission();
-      console.log("THEN SAVING");
-      CameraRoll.save(uri).then(
-        (res) => {
-          console.log("Success");
-          Toast.show("Video saved to your gallery", Toast.SHORT, [
-            "UIAlertController",
-          ]);
-        },
-        (err) => {
-          console.log("Error", err);
-        }
-      );
-    }
-  };
-
   generateFinalVideoOutputFile = () => {
     return `file://${
       RNFS.DocumentDirectoryPath
@@ -370,10 +340,10 @@ class CameraScreen extends PureComponent {
   };
 
   generateVideoFrames = () => {
-    const { finalVideoUrl } = this.state;
-    RNFFmpeg.execute(
-      `-i ${finalVideoUrl} -r 1 -vf scale=250:-1 ${finalVideoUrl}_thumb_%01d.jpg`
-    ).then(
+    const { finalVideoUrl, recordedVideoTime } = this.state;
+    const thumbGenerationCommand = `-i ${finalVideoUrl} -vf fps=${10/recordedVideoTime},scale=150:-1 -shortest ${finalVideoUrl}_thumb_%01d.jpg`;
+    console.log("THUMNAIL COMMAND", thumbGenerationCommand);
+    RNFFmpeg.execute(thumbGenerationCommand).then(
       (res) => {
         console.log("Execute result", res);
         this.setState({
@@ -393,7 +363,7 @@ class CameraScreen extends PureComponent {
 
       if (!this.state.selectedSong) return;
 
-      if (this.state.processingFinalVideo) {
+      if (this.state.processingFinalVideo || this.state.finalProcessedVideoUrl) {
         AudioPlayer.pause();
       } else {
         AudioPlayer.play();
@@ -418,11 +388,11 @@ class CameraScreen extends PureComponent {
     const { finalVideoUrl, recordedVideoTime } = this.state;
     let { selectedSong } = this.state;
     if (selectedSong && selectedSong.path) {
-      selectedSong = `file://${selectedSong.path.trim().replace(/ /g, "%20")}`;
+      selectedSong = `"file://${selectedSong.path}"`;
     }
 
     // Generating watermark
-    const watermark = "logom.png";
+    const watermark = "logo-watermark.png";
     const watermarkAbsolutePath = `file://${
       RNFS.DocumentDirectoryPath
     }/${watermark}`;
@@ -434,13 +404,13 @@ class CameraScreen extends PureComponent {
         const finalFileWithWatermark = this.generateFinalVideoOutputFile();
 
         const songAndWaterMarkMixerCommand = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} -i ${selectedSong} \
-        -filter_complex "[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[0][i]overlay=x=15:y=15:shortest=1[v]" \
-        -qscale:v 9 -pix_fmt yuv420p -c:a aac -strict -2 \
+        -filter_complex "[0:v]scale=540:-1[b];[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[b][i]overlay=x=15:y=15:shortest=1[v]" \
+        -crf 28 -c:a aac -strict -2 \
         -map "[v]" -map 2:a -shortest  ${finalFileWithWatermark}`;
 
         const waterMarkCommand = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} \
-        -filter_complex "[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[0][i]overlay=x=15:y=15" \
-        -qscale:v 9 -pix_fmt yuv420p -c:a aac -strict -2 -shortest  ${finalFileWithWatermark}`;
+        -filter_complex "[0:v]scale=720:-1[b];[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[b][i]overlay=x=15:y=15" \
+        -crf 28 -c:a aac -strict -2 -c:a aac -shortest  ${finalFileWithWatermark}`;
 
         const finalVideoFile = await RNFFmpeg.execute(
           selectedSong ? songAndWaterMarkMixerCommand : waterMarkCommand
@@ -753,6 +723,8 @@ class CameraScreen extends PureComponent {
       nonCollidingMultiSliderValue,
       finalVideoPaused,
       processingFinalVideo,
+      faceObjectY,
+      faceObjectX
     } = this.state;
 
     const onProgress = (data) => {
@@ -767,12 +739,14 @@ class CameraScreen extends PureComponent {
 
     const renderThumbnails = () => {
       const thumbs = [];
-      for (let idx = 1; idx <= recordedVideoTime; idx++) {
+      for (let idx = 1; idx <= 9; idx++) {
         thumbs.push(
           <View key={`video-thumb-${idx}`}>
             <Image
               source={{ uri: `${finalVideoThumbPath}${idx}.jpg` }}
-              style={styles.videoThumb}
+              style={[styles.videoThumb, {
+                width: (screenDimensions.ScreenWidth-50)/10
+              }]}
             />
           </View>
         );
@@ -804,10 +778,15 @@ class CameraScreen extends PureComponent {
             captureAudio={selectedSong ? false : true}
             onProgress={onProgress}
             onRecordingEnd={this.onRecordingEnd.bind(this)}
-            quality={"720p"}
-            codec={"H264"}
-            birtate="30000"
             exposure={0.5}
+            orientation={"portraitUpsideDown"}
+            onFacesDetected={(val) => {
+                console.log("VVVVVVV", val.faces[0].bounds)
+                this.setState({
+                  faceObjectX: val.faces[0].bounds.origin.x,
+                  faceObjectY: val.faces[0].bounds.origin.y,
+                })
+            }}
             faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate} // Need to test
             androidCameraPermissionOptions={{
               title: "Permission to use camera",
@@ -1061,7 +1040,7 @@ class CameraScreen extends PureComponent {
 
               <View style={styles.videoWatermark}>
                 <Image source={Logo} style={styles.watermarkLogo} />
-                <Text style={styles.watermarkText}>KrishCdbry</Text>
+                {/* <Text style={styles.watermarkText}>KrishCdbry</Text> */}
               </View>
 
               <View style={styles.saveVideoButtons}>
@@ -1396,8 +1375,8 @@ const styles = StyleSheet.create({
     ...CommonStyles.flex,
   },
   watermarkLogo: {
-    height: 55,
-    width: 55,
+    height: 45,
+    width: 45,
     zIndex: 1000,
     resizeMode: "contain",
   },
@@ -1474,4 +1453,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CameraScreen;
+export default RDScreen;
