@@ -26,7 +26,9 @@ import Toast from "react-native-simple-toast";
 import AudioPlayer from "react-native-play-audio";
 import RNFS from "react-native-fs";
 import FileViewer from "react-native-file-viewer";
+import filters from 'react-native-image-filter-kit';
 
+console.log(filters);
 
 import {
   requestMultiple,
@@ -93,6 +95,7 @@ class RDScreen extends PureComponent {
       finalProcessedVideoUrl: null,
       faceObjectX: -1,
       faceObjectY: -1,
+      selectFilter: '_1977'
     };
 
     this.spinValue = new Animated.Value(0);
@@ -794,6 +797,22 @@ class RDScreen extends PureComponent {
       return thumbs;
     };
 
+    const imageStyle = { width: screenDimensions.ScreenWidth, height: 900, opacity: 0.55 }
+
+    console.log("FFFF", filters["_1977"])
+
+    const atx = (
+      <Image
+        style={imageStyle}
+        source={White}
+        resizeMode={'cover'}
+      />
+    )
+
+    const FilterComponent = filters[this.state.selectFilter];
+    
+    console.log("FILTER", this.state.selectFilter);
+
     return (
       <View style={styles.container}>
         {processingFinalVideo && <ProcessingLoader />}
@@ -854,6 +873,55 @@ class RDScreen extends PureComponent {
             width: 90
           }
         } source={Logo}  /> */}
+
+       <FilterComponent image={atx} style={
+          {
+            position: 'absolute',
+            zIndex: 1000000,
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            width: screenDimensions.ScreenWidth, 
+            height: screenDimensions.ScreenHeight
+          }
+        } />
+
+        <ScrollView style={{
+          position: 'absolute',
+          left: 20,
+          top: 90,
+          width: 100,
+          height: 800,
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          zIndex: 99999999999,
+          elevation: 900,
+          overflow: 'scroll'
+        }}>
+           {
+             Object.keys(filters).map((item, idx) => {
+               return (
+                <TouchableOpacity key={`filter-item-${idx}`} onPress={() => this.selectFilter(item)} style={{
+                  width: 90,
+                  height: 60,
+                  borderRadius: 5,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginVertical: 7,
+                  borderRadius: 90,
+                  backgroundColor: 'rgba(0,0,0,0.5)'
+                }}>
+                  <Text style={{color: '#fff'}}>{item}</Text>
+                </TouchableOpacity>
+               )
+             })
+           }
+        </ScrollView> 
+
+
 
         {this.renderTimer()}
 
