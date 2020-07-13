@@ -51,9 +51,10 @@ import ProgressBar from "../../../plugins/ProgressBar";
 import { screenDimensions } from "../../../utils/global";
 import CommonStyles from "../../../styles/common";
 import SongsList from "../../../components/SongsList/SongsList";
-import ProcessingLoader from "../../Loaders/ProcessingLoader";
+import ProcessingLoader from "../../../components/Loaders/ProcessingLoader";
+import FinalProcessedVideo from "../../../components/FinalProcessedVideo/FinalProcessedVideo";
 
-class CameraScreeen extends PureComponent {
+class CameraScreen extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -87,7 +88,7 @@ class CameraScreeen extends PureComponent {
       finalVideoPaused: false,
       nonCollidingMultiSliderValue: [0, 100],
       processingFinalVideo: false,
-      finalProcessedVideoUrl: null
+      finalProcessedVideoUrl: null,
     };
 
     this.spinValue = new Animated.Value(0);
@@ -155,6 +156,16 @@ class CameraScreeen extends PureComponent {
   }
 
   _toggleSongPicker = () => {
+    const {time, selectedSong} = this.state;
+    if (time > 0 && !selectedSong) {
+      Toast.show(
+        "Cannot choose song once recording started. ",
+        Toast.SHORT,
+        ["UIAlertController"]
+      );
+      return;
+    }
+
     this.setState(
       {
         showSongPicker: !this.state.showSongPicker,
@@ -392,9 +403,9 @@ class CameraScreeen extends PureComponent {
   setFinalProcessedVideoState = (finalProcessedVideoUrl, saveGallery) => {
     this.setState({ finalProcessedVideoUrl, processingFinalVideo: false }, () => {
       this.triggerBackgroundAudio()
-      if (saveGallery) {
-        this.saveVideo(`file://${finalProcessedVideoUrl}`);
-      }
+      // if (saveGallery) {
+      //   this.saveVideo(`file://${finalProcessedVideoUrl}`);
+      // }
     });
   }
 
@@ -707,7 +718,7 @@ class CameraScreeen extends PureComponent {
     this._toggleSongPicker();
     this.setState(
       {
-        selectedSong,
+        selectedSong
       },
       () => {
         this.songIconAnimate();
@@ -823,26 +834,26 @@ class CameraScreeen extends PureComponent {
             <Text style={styles.zoomControlOptionText}>1x</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={renderZoomStyles(0.25)}
-            onPress={() => this.selectZoom(0.25)}
+            style={renderZoomStyles(0.15)}
+            onPress={() => this.selectZoom(0.15)}
           >
             <Text style={styles.zoomControlOptionText}>1.25x</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={renderZoomStyles(0.35)}
+            onPress={() => this.selectZoom(0.35)}
+          >
+            <Text style={styles.zoomControlOptionText}>1.5x</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={renderZoomStyles(0.5)}
             onPress={() => this.selectZoom(0.5)}
           >
-            <Text style={styles.zoomControlOptionText}>1.5x</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={renderZoomStyles(0.7)}
-            onPress={() => this.selectZoom(0.75)}
-          >
             <Text style={styles.zoomControlOptionText}>1.75x</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={renderZoomStyles(1)}
-            onPress={() => this.selectZoom(1)}
+            style={renderZoomStyles(0.75)}
+            onPress={() => this.selectZoom(0.75)}
           >
             <Text style={styles.zoomControlOptionText}>2x</Text>
           </TouchableOpacity>
@@ -926,7 +937,7 @@ class CameraScreeen extends PureComponent {
                 {
                   backgroundColor: this.state.selectedSong
                     ? "#FF544D"
-                    : "rgba(32,32,32,0.69)",
+                    : "rgba(32,32,32,0.72)",
                 },
               ]}
               onPress={this._toggleSongPicker.bind(this)}
@@ -1115,6 +1126,11 @@ class CameraScreeen extends PureComponent {
               )}
             </View>
           )}
+
+
+          {
+            this.state.finalProcessedVideoUrl && <FinalProcessedVideo uri={this.state.finalProcessedVideoUrl} {...this.props}/>
+          }
       </View>
     );
   }
@@ -1237,15 +1253,15 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(32,32,32,0.69)",
+    backgroundColor: "rgba(32,32,32,0.72)",
     shadowColor: "#fff",
     shadowOffset: {
-      width: 4,
-      height: 16,
+      width: 1,
+      height: 1,
     },
-    shadowOpacity: 0.39,
-    shadowRadius: 8.3,
-    elevation: 3,
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
     zIndex: 1,
   },
   songPicker: {
@@ -1458,4 +1474,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CameraScreeen;
+export default CameraScreen;

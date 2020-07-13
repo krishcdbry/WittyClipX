@@ -52,6 +52,7 @@ import { screenDimensions } from "../../../utils/global";
 import CommonStyles from "../../../styles/common";
 import SongsList from "../../../components/SongsList/SongsList";
 import ProcessingLoader from "../../../components/Loaders/ProcessingLoader";
+import FinalProcessedVideo from "../../../components/FinalProcessedVideo/FinalProcessedVideo";
 
 class RDScreen extends PureComponent {
   constructor(props) {
@@ -87,7 +88,7 @@ class RDScreen extends PureComponent {
       finalVideoPaused: false,
       nonCollidingMultiSliderValue: [0, 100],
       processingFinalVideo: false,
-      finalProcessedVideoUrl: null
+      finalProcessedVideoUrl: null,
     };
 
     this.spinValue = new Animated.Value(0);
@@ -155,6 +156,16 @@ class RDScreen extends PureComponent {
   }
 
   _toggleSongPicker = () => {
+    const {time, selectedSong} = this.state;
+    if (time > 0 && !selectedSong) {
+      Toast.show(
+        "Cannot choose song once recording started. ",
+        Toast.SHORT,
+        ["UIAlertController"]
+      );
+      return;
+    }
+
     this.setState(
       {
         showSongPicker: !this.state.showSongPicker,
@@ -392,9 +403,9 @@ class RDScreen extends PureComponent {
   setFinalProcessedVideoState = (finalProcessedVideoUrl, saveGallery) => {
     this.setState({ finalProcessedVideoUrl, processingFinalVideo: false }, () => {
       this.triggerBackgroundAudio()
-      if (saveGallery) {
-        this.saveVideo(`file://${finalProcessedVideoUrl}`);
-      }
+      // if (saveGallery) {
+      //   this.saveVideo(`file://${finalProcessedVideoUrl}`);
+      // }
     });
   }
 
@@ -707,7 +718,7 @@ class RDScreen extends PureComponent {
     this._toggleSongPicker();
     this.setState(
       {
-        selectedSong,
+        selectedSong
       },
       () => {
         this.songIconAnimate();
@@ -1115,6 +1126,11 @@ class RDScreen extends PureComponent {
               )}
             </View>
           )}
+
+
+          {
+            this.state.finalProcessedVideoUrl && <FinalProcessedVideo uri={this.state.finalProcessedVideoUrl} {...this.props}/>
+          }
       </View>
     );
   }
