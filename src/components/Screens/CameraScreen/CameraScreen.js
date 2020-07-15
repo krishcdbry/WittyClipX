@@ -25,6 +25,8 @@ import RNVideoEditor from "react-native-video-editor";
 import Toast from "react-native-simple-toast";
 import AudioPlayer from "react-native-play-audio";
 import RNFS from "react-native-fs";
+import FileViewer from "react-native-file-viewer";
+
 
 import {
   requestMultiple,
@@ -45,6 +47,7 @@ import Gallery from "../../../../assets/images/icons/gallery.png";
 import More from "../../../../assets/images/icons/more.png";
 import Back from "../../../../assets/images/icons/back.png";
 import Logo from "../../../../assets/images/logom.png";
+import White from "../../../../assets/images/white.png";
 
 import ProgressBar from "../../../plugins/ProgressBar";
 import { screenDimensions } from "../../../utils/global";
@@ -53,7 +56,7 @@ import SongsList from "../../../components/SongsList/SongsList";
 import ProcessingLoader from "../../../components/Loaders/ProcessingLoader";
 import FinalProcessedVideo from "../../../components/FinalProcessedVideo/FinalProcessedVideo";
 
-class RDScreen extends PureComponent {
+class CameraScreen extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -76,6 +79,7 @@ class RDScreen extends PureComponent {
       videoReady: false,
       screenHeight: screenDimensions.ScreenHeight,
       finalVideoUrl: null,
+      finalVideoType: 'mp4',
       flashMode: RNCamera.Constants.FlashMode.off,
       width: 50,
       maxOpacity,
@@ -108,6 +112,11 @@ class RDScreen extends PureComponent {
   }
 
   componentDidMount() {
+
+    RNFS.readDir(RNFS.DocumentDirectoryPath).then(res => {
+      console.log("RES", res)
+    })
+
     this.setState({
       width: screenDimensions.ScreenWidth / 2,
     });
@@ -139,7 +148,7 @@ class RDScreen extends PureComponent {
           toValue: 1,
           duration: 3000,
           easing: Easing.linear,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS === "android",
         })
       );
       this.animatedVal.start();
@@ -177,7 +186,7 @@ class RDScreen extends PureComponent {
             Animated.timing(this.state.songPickerAnimatedValue, {
               toValue: 1,
               duration: 500,
-              useNativeDriver: true,
+              useNativeDriver: Platform.OS === "android",
             }),
           ]).start();
         } else {
@@ -185,7 +194,7 @@ class RDScreen extends PureComponent {
             Animated.timing(this.state.songPickerAnimatedValue, {
               toValue: 0,
               duration: 500,
-              useNativeDriver: true,
+              useNativeDriver: Platform.OS === "android",
             }),
           ]).start();
         }
@@ -333,10 +342,45 @@ class RDScreen extends PureComponent {
     );
   }
 
+  checkAndroidPermission = async () => {
+    try {
+      console.log("ASKING PERMISSIONS");
+      const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+      PermissionsAndroid.request(permission).then((res) => {
+        console.log("ASKING PERMISSIONS RESOLVING", res);
+        Promise.resolve();
+      });
+    } catch (error) {
+      Promise.reject(error);
+    }
+  };
+
+  saveVideo = async (uri) => {
+    if (Platform.OS === "android") {
+      await this.checkAndroidPermission();
+      console.log("THEN SAVING");
+      CameraRoll.save(uri).then(
+        (res) => {
+          console.log("Success");
+          Toast.show("Video saved to your gallery", Toast.SHORT, [
+            "UIAlertController",
+          ]);
+        },
+        (err) => {
+          console.log("Error", err);
+        }
+      );
+    }
+  };
+
   generateFinalVideoOutputFile = () => {
     return `file://${
       RNFS.DocumentDirectoryPath
-    }-generated-output-file-${new Date().toLocaleTimeString()}.mp4`;
+    }/generated-output-file.${this.state.finalVideoType}`;
+  };
+
+  generateWatermarkFilePath = () => {
+    return `${RNFS.DocumentDirectoryPath}/generated-watermark-${new Date().toLocaleTimeString()}.png`;
   };
 
   generateVideoFrames = () => {
@@ -392,45 +436,62 @@ class RDScreen extends PureComponent {
     }
 
     // Generating watermark
-    const watermark = "logo-watermark.png";
-    const watermarkAbsolutePath = `file://${
-      RNFS.DocumentDirectoryPath
-    }/${watermark}`;
+    const watermark = (Platform.OS == 'ios') ? `${RNFS.MainBundlePath}/assets/wittyclip-watermark.png` : `${RNFS.DocumentDirectoryPath}/wittyclip-watermark.png`;
+    const fontFamily = (Platform.OS == 'ios') ? `${RNFS.MainBundlePath}/Capriola-Regular.ttf` : `${RNFS.DocumentDirectoryPath}/Capriola-Regular.ttf`;
 
-    // TODO: Some error in this - await not working
-    RNFS.copyFileAssets(watermark, watermarkAbsolutePath)
-      .then(async () => {
-        // Output file
-        const finalFileWithWatermark = this.generateFinalVideoOutputFile();
+    if (Platform.OS == 'android') {
 
-        const songAndWaterMarkMixerCommand = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} -i ${selectedSong} \
-        -filter_complex "[0:v]scale=540:-1[b];[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[b][i]overlay=x=15:y=15:shortest=1[v]" \
-        -crf 28 -c:a aac -strict -2 \
-        -map "[v]" -map 2:a -shortest  ${finalFileWithWatermark}`;
+      const waterMarkFileExists = await RNFS.existsAssets(watermark)
+      if (!waterMarkFileExists) {
+        await RNFS.copyFileAssets('wittyclip-watermark.png', watermark)
+      }
 
-        const waterMarkCommand = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} \
-        -filter_complex "[0:v]scale=720:-1[b];[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[b][i]overlay=x=15:y=15" \
-        -crf 28 -c:a aac -strict -2 -c:a aac -shortest  ${finalFileWithWatermark}`;
+      const fontFamilyExists = await RNFS.existsAssets(fontFamily)
+      if (!fontFamilyExists) {
+        await RNFS.copyFileAssets('fonts/Capriola-Regular.ttf', fontFamily)
+      }
+    }
 
-        const finalVideoFile = await RNFFmpeg.execute(
-          selectedSong ? songAndWaterMarkMixerCommand : waterMarkCommand
-        );
-        if (!finalVideoFile) {
-          this.setFinalProcessedVideoState(finalVideoUrl)
-          return;
-        }
-        this.setFinalProcessedVideoState(finalFileWithWatermark, true);
-      })
-      .catch((_err) => {
-        console.log("error", _err);
-        this.setFinalProcessedVideoState(finalVideoUrl)
-      });
+    // Output file
+    const finalFileWithWatermark = this.generateFinalVideoOutputFile();
+
+    const songAndWaterMarkMixerCommand = `-y -ss 0 -t ${recordedVideoTime} \
+    -i ${finalVideoUrl} -loop 1 \
+    -i ${watermark} \
+    -i ${selectedSong} \
+    -filter_complex "[0]scale=540:-1[0v];\
+    [1]format=yuva420p,scale=72:-1[0l];\
+    [0v][0l]overlay=x=15:y=15:shortest=1,\
+    drawtext=fontfile=${fontFamily}:text='Krishcdbry':fontcolor=white:shadowcolor=black:shadowx=2:shadowy=2:fontsize=15:x=25:y=90[0vl]" \
+    -crf 28 -c:a aac -strict -2 \
+    -map "[0vl]" -map 2:a -shortest  ${finalFileWithWatermark}`;
+
+    const waterMarkCommand = `-y -ss 0 -t ${recordedVideoTime}\
+     -i ${finalVideoUrl} -loop 1 \
+     -i ${watermark} \
+    -filter_complex "[0:v]scale=540:-1[b];\
+    [1]format=yuva420p,scale=72:-1[i];\
+    [b][i]overlay=x=15:y=15,\
+    drawtext=fontfile=${fontFamily}:text='Krishcdbry':fontcolor=white:shadowcolor=black:shadowx=2:shadowy=2:fontsize=15:x=25:y=90" \
+    -crf 28 -c:a aac -strict -2 -c:a aac -shortest  ${finalFileWithWatermark}`;
+
+    const finalVideoFile = await RNFFmpeg.execute(
+      selectedSong ? songAndWaterMarkMixerCommand : waterMarkCommand
+    );
+    if (!finalVideoFile) {
+      this.setFinalProcessedVideoState(finalVideoUrl)
+      return;
+    }
+    this.setFinalProcessedVideoState(finalFileWithWatermark, true);
+
   };
 
   setPreProcessedVideo = (video) => {
+    const videoFileSplit = video.split('.')
     this.setState(
       {
         finalVideoUrl: video,
+        finalVideoType: videoFileSplit[videoFileSplit.length-1]
       },
       () => {
         this.generateVideoFrames();
@@ -476,9 +537,7 @@ class RDScreen extends PureComponent {
               console.log("Error: " + results);
             },
             (_, file) => {
-              console.log("FILEEEEE", file);
               this.setPreProcessedVideo(`file://${file}`);
-              // this.processFinalVideo(`file://${file}`);
             }
           );
         } catch (e) {
@@ -533,7 +592,7 @@ class RDScreen extends PureComponent {
       toValue: 1,
       duration: 225,
       easing: Easing.bezier(0.0, 0.0, 0.2, 1),
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS === "android",
     }).start();
 
     if (this.state.pause) {
@@ -709,6 +768,12 @@ class RDScreen extends PureComponent {
     AudioPlayer.stop();
   }
 
+  selectFilter = (filter) => {
+    this.setState({
+      selectFilter: filter
+    })
+  }
+
   render() {
     const {
       cameraZoom,
@@ -778,16 +843,17 @@ class RDScreen extends PureComponent {
             captureAudio={selectedSong ? false : true}
             onProgress={onProgress}
             onRecordingEnd={this.onRecordingEnd.bind(this)}
-            exposure={0.5}
+            // exposure={0.5}
             orientation={"portraitUpsideDown"}
+            hideShutterView={true}
             onFacesDetected={(val) => {
-                console.log("VVVVVVV", val.faces[0].bounds)
-                this.setState({
-                  faceObjectX: val.faces[0].bounds.origin.x,
-                  faceObjectY: val.faces[0].bounds.origin.y,
-                })
+                // console.log("VVVVVVV", val.faces[0].bounds)
+                // this.setState({
+                //   faceObjectX: val.faces[0].bounds.origin.x,
+                //   faceObjectY: val.faces[0].bounds.origin.y,
+                // })
             }}
-            faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate} // Need to test
+            // faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate} // Need to test
             androidCameraPermissionOptions={{
               title: "Permission to use camera",
               message: "We need your permission to use your camera",
@@ -803,9 +869,22 @@ class RDScreen extends PureComponent {
           />
         )}
 
+
+        {/* <Image style={
+          {
+            position: 'absolute',
+            zIndex: 1000000,
+            top: faceObjectY,
+            left: faceObjectX,
+            height: 90,
+            width: 90
+          }
+        } source={Logo}  /> */}
+
         {this.renderTimer()}
 
         <View style={styles.zoomControls}>
+          
           <TouchableOpacity
             style={renderZoomStyles(0)}
             onPress={() => this.selectZoom(0)}
@@ -1453,4 +1532,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RDScreen;
+export default CameraScreen;

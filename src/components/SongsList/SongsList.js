@@ -62,8 +62,9 @@ class SongsList extends PureComponent {
       genre: true,
       title: true,
       cover: true,
+      file: true,
       minimumSongDuration: 15000, // get songs bigger than 10000 miliseconds duration,
-      fields: ["title", "albumTitle", "genre", "lyrics", "artwork", "duration", "cover"], // for iOs Version
+      fields: ["title", "albumTitle", "genre", "lyrics", "artwork", "duration", "cover", "path"], // for iOs Version
     })
       .then((songs) => {
         if (songs && songs.length > 0) {
@@ -88,6 +89,7 @@ class SongsList extends PureComponent {
   }
 
   componentDidMount() {
+    this.fetchMediaFromDevice();
     try {
       AsyncStorage.getItem("songs").then((data) => {
         if (data) {

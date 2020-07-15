@@ -73,7 +73,7 @@ const LandingScreen = ({ navigation }) => {
         duration: 500,
         easing: Easing.Bounce,
         repeat: true,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS === "android",
       }).start(() => {
         animate(count + 1);
       }),

@@ -4,19 +4,26 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '10.0'
 
 target 'wittyclip' do
+
+  pod 'react-native-ffmpeg/full-gpl', :podspec => '../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec'
+
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
-
-
   pod 'RNReactNativeGetMusicFiles', :path => '../node_modules/react-native-get-music-files'
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
-  pod 'react-native-video-watermark', :path => '../node_modules/react-native-video-watermark'
+  pod 'RNVideoEditor', :path => '../node_modules/react-native-video-editor'
+
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone.podspec"
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
+
 
   target 'wittyclipTests' do
     inherit! :complete

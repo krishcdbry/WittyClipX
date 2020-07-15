@@ -20,7 +20,7 @@ const App = () => {
         barStyle="dark-content"
       />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LandingScreen">
+        <Stack.Navigator initialRouteName="RDScreen">
           <Stack.Screen
             name="LandingScreen"
             component={LandingScreen}

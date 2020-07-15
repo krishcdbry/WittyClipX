@@ -34,7 +34,11 @@ class FinalProcessedVideo extends PureComponent {
     requestMultiple([
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
       PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-    ]).then((result) => {});
+    ]).then((result) => {
+      if (this.props.uri) {
+        this.saveVideo(this.props.uri);
+      }
+    });
   }
 
   checkAndroidPermission = async () => {
@@ -51,25 +55,24 @@ class FinalProcessedVideo extends PureComponent {
   };
 
   saveVideo = async (uri) => {
-      console.log("URI", uri)
     if (Platform.OS === "android") {
       await this.checkAndroidPermission();
       console.log("THEN SAVING");
-      CameraRoll.save(uri).then(
-        (res) => {
-          console.log("Success");
-          Toast.show("Video saved to your gallery", Toast.SHORT, [
-            "UIAlertController",
-          ]);
-          setTimeout(() => {
-            this.props.navigation.navigate("HomeScreen")
-          }, 500)
-        },
-        (err) => {
-          console.log("Error", err);
-        }
-      );
     }
+    CameraRoll.save(uri).then(
+      (res) => {
+        console.log("Success");
+        Toast.show("Video saved to your gallery", Toast.SHORT, [
+          "UIAlertController",
+        ]);
+        setTimeout(() => {
+          // this.props.navigation.navigate("HomeScreen");
+        }, 500);
+      },
+      (err) => {
+        console.log("Error", err);
+      }
+    );
   };
 
   render() {
@@ -91,12 +94,23 @@ class FinalProcessedVideo extends PureComponent {
           }}
         />
 
-        <TouchableOpacity
-          style={styles.downloadVideoButton}
-          onPress={() => this.saveVideo(this.props.uri)}
-        >
-          <Text style={styles.downloadVideoButtonText}>Download Video</Text>
-        </TouchableOpacity>
+        <View style={styles.videoButtons}>
+          <TouchableOpacity
+            style={styles.downloadVideoButton}
+            onPress={() => {
+              console.log("He he he");
+            }}
+          >
+            <Text style={styles.downloadVideoButtonText}>Share</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.downloadVideoButton}
+            onPress={() => this.saveVideo(this.props.uri)}
+          >
+            <Text style={styles.downloadVideoButtonText}>Re-Download</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -117,25 +131,35 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  downloadVideoButton: {
+  videoButtons: {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: 'row',
+    elevation: 3,
+    zIndex: 10000000,
+    position: "absolute",
+    bottom: 50,
     marginTop: 40,
-    ...CommonStyles.flex,
+  },
+  downloadVideoButton: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 20,
-    height: 35,
+    height: 42,
+    width: 120,
+    marginVertical: 5,
     paddingHorizontal: 15,
     backgroundColor: "#FF544D",
     marginHorizontal: 5,
-    shadowColor: "#fff",
+    shadowColor: "#222222",
     shadowOffset: {
-      width: 4,
-      height: 16,
+      width: 1,
+      height: 5,
     },
     shadowOpacity: 0.39,
     shadowRadius: 8.3,
-    elevation: 3,
-    zIndex: 10000000,
-    position: 'absolute',
-    bottom: 60
   },
   downloadVideoButtonText: {
     color: "#fff",

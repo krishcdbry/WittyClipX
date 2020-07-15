@@ -68,7 +68,7 @@ const TvTab = ({ navigation }) => {
   };
 
   useEffect(() => {
-    fetchVideos();
+    // fetchVideos();
     requestMultiple([
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
       PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,

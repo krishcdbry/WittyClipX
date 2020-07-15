@@ -79,6 +79,7 @@ class RDScreen extends PureComponent {
       videoReady: false,
       screenHeight: screenDimensions.ScreenHeight,
       finalVideoUrl: null,
+      finalVideoType: 'mp4',
       flashMode: RNCamera.Constants.FlashMode.off,
       width: 50,
       maxOpacity,
@@ -111,6 +112,11 @@ class RDScreen extends PureComponent {
   }
 
   componentDidMount() {
+
+    RNFS.readDir(RNFS.DocumentDirectoryPath).then(res => {
+      console.log("RES", res)
+    })
+
     this.setState({
       width: screenDimensions.ScreenWidth / 2,
     });
@@ -142,7 +148,7 @@ class RDScreen extends PureComponent {
           toValue: 1,
           duration: 3000,
           easing: Easing.linear,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS === "android",
         })
       );
       this.animatedVal.start();
@@ -180,7 +186,7 @@ class RDScreen extends PureComponent {
             Animated.timing(this.state.songPickerAnimatedValue, {
               toValue: 1,
               duration: 500,
-              useNativeDriver: true,
+              useNativeDriver: Platform.OS === "android",
             }),
           ]).start();
         } else {
@@ -188,7 +194,7 @@ class RDScreen extends PureComponent {
             Animated.timing(this.state.songPickerAnimatedValue, {
               toValue: 0,
               duration: 500,
-              useNativeDriver: true,
+              useNativeDriver: Platform.OS === "android",
             }),
           ]).start();
         }
@@ -370,7 +376,11 @@ class RDScreen extends PureComponent {
   generateFinalVideoOutputFile = () => {
     return `file://${
       RNFS.DocumentDirectoryPath
-    }-generated-output-file-${new Date().toLocaleTimeString()}.mp4`;
+    }/generated-output-file.${this.state.finalVideoType}`;
+  };
+
+  generateWatermarkFilePath = () => {
+    return `${RNFS.DocumentDirectoryPath}/generated-watermark-${new Date().toLocaleTimeString()}.png`;
   };
 
   generateVideoFrames = () => {
@@ -426,45 +436,67 @@ class RDScreen extends PureComponent {
     }
 
     // Generating watermark
-    const watermark = "logo-watermark.png";
-    const watermarkAbsolutePath = `file://${
-      RNFS.DocumentDirectoryPath
-    }/${watermark}`;
+    const watermark = (Platform.OS == 'ios') ? `${RNFS.MainBundlePath}/assets/wittyclip-watermark.png` : `${RNFS.DocumentDirectoryPath}/wittyclip-watermark.png`;
+    const fontFamily = (Platform.OS == 'ios') ? `${RNFS.MainBundlePath}/Capriola-Regular.ttf` : `${RNFS.DocumentDirectoryPath}/Capriola-Regular.ttf`;
 
-    // TODO: Some error in this - await not working
-    RNFS.copyFileAssets(watermark, watermarkAbsolutePath)
-      .then(async () => {
-        // Output file
-        const finalFileWithWatermark = this.generateFinalVideoOutputFile();
+    if (Platform.OS == 'android') {
 
-        const songAndWaterMarkMixerCommand = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} -i ${selectedSong} \
-        -filter_complex "[0:v]scale=540:-1[b];[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[b][i]overlay=x=15:y=15:shortest=1[v]" \
-        -crf 28 -c:a aac -strict -2 \
-        -map "[v]" -map 2:a -shortest  ${finalFileWithWatermark}`;
+      const waterMarkFileExists = await RNFS.existsAssets(watermark)
+      if (!waterMarkFileExists) {
+        await RNFS.copyFileAssets('wittyclip-watermark.png', watermark)
+      }
 
-        const waterMarkCommand = `-ss 0 -t ${recordedVideoTime} -i ${finalVideoUrl} -loop 1 -i ${watermarkAbsolutePath} \
-        -filter_complex "[0:v]scale=720:-1[b];[1]format=yuva420p,fade=in:st=1:d=1:alpha=1[i];[b][i]overlay=x=15:y=15" \
-        -crf 28 -c:a aac -strict -2 -c:a aac -shortest  ${finalFileWithWatermark}`;
+      const fontFamilyExists = await RNFS.existsAssets(fontFamily)
+      if (!fontFamilyExists) {
+        await RNFS.copyFileAssets('fonts/Capriola-Regular.ttf', fontFamily)
+      }
+    }
 
-        const finalVideoFile = await RNFFmpeg.execute(
-          selectedSong ? songAndWaterMarkMixerCommand : waterMarkCommand
-        );
-        if (!finalVideoFile) {
-          this.setFinalProcessedVideoState(finalVideoUrl)
-          return;
-        }
-        this.setFinalProcessedVideoState(finalFileWithWatermark, true);
-      })
-      .catch((_err) => {
-        console.log("error", _err);
-        this.setFinalProcessedVideoState(finalVideoUrl)
-      });
+    // Output file
+    const finalFileWithWatermark = this.generateFinalVideoOutputFile();
+
+    const songAndWaterMarkMixerCommand = `-y -ss 0 -t ${recordedVideoTime} \
+    -i ${finalVideoUrl} -loop 1 \
+    -i ${watermark} \
+    -i ${selectedSong} \
+    -filter_complex "[0]scale=540:-1[0v];\
+    [1]format=yuva420p,scale=72:-1[0l];\
+    [0v][0l]overlay=x=430:y=25:shortest=1,\
+    drawtext=fontfile=${fontFamily}:text='@Krishcdbry':fontcolor=white:shadowcolor=black:shadowx=2:shadowy=2:fontsize=15:x=420:y=102,\
+    drawtext=fontfile=${fontFamily}:text='WittyClip.com':fontcolor=#dddddd:shadowcolor=black:shadowx=2:shadowy=2:fontsize=14:x=20:y=925[0vl]" \
+    -crf 28 -c:a aac -strict -2 \
+    -map "[0vl]" -map 2:a -shortest  ${finalFileWithWatermark}`;
+
+    const waterMarkCommand = `-y -ss 0 -t ${recordedVideoTime}\
+     -i ${finalVideoUrl} -loop 1 \
+     -i ${watermark} \
+    -filter_complex "[0:v]scale=540:-1[b];\
+    [1]format=yuva420p,scale=72:-1[i];\
+    [b][i]overlay=x='(W*2.25)-min(t*W/0.95\,(W*2.25-430))':y=25,\
+    drawtext=fontfile=${fontFamily}:text='@Krishcdbry':fontcolor=white:shadowcolor=black:shadowx=2:shadowy=2:fontsize=15:x=420:y=102,\
+    drawtext=fontfile=${fontFamily}:text='WittyClip.com':fontcolor=#dddddd:shadowcolor=black:shadowx=2:shadowy=2:fontsize=14:x=20:y=925" \
+    -crf 28 -c:a aac -strict -2 -c:a aac -shortest  ${finalFileWithWatermark}`;
+
+
+    // [b][i]overlay=x='if(lte(-w+(t)*500,430),-w+(t)*500,430)':y=25,\
+
+    const finalVideoFile = await RNFFmpeg.execute(
+      selectedSong ? songAndWaterMarkMixerCommand : waterMarkCommand
+    );
+    if (!finalVideoFile) {
+      this.setFinalProcessedVideoState(finalVideoUrl)
+      return;
+    }
+    this.setFinalProcessedVideoState(finalFileWithWatermark, true);
+
   };
 
   setPreProcessedVideo = (video) => {
+    const videoFileSplit = video.split('.')
     this.setState(
       {
         finalVideoUrl: video,
+        finalVideoType: videoFileSplit[videoFileSplit.length-1]
       },
       () => {
         this.generateVideoFrames();
@@ -510,9 +542,7 @@ class RDScreen extends PureComponent {
               console.log("Error: " + results);
             },
             (_, file) => {
-              console.log("FILEEEEE", file);
               this.setPreProcessedVideo(`file://${file}`);
-              // this.processFinalVideo(`file://${file}`);
             }
           );
         } catch (e) {
@@ -567,7 +597,7 @@ class RDScreen extends PureComponent {
       toValue: 1,
       duration: 225,
       easing: Easing.bezier(0.0, 0.0, 0.2, 1),
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS === "android",
     }).start();
 
     if (this.state.pause) {
@@ -818,8 +848,9 @@ class RDScreen extends PureComponent {
             captureAudio={selectedSong ? false : true}
             onProgress={onProgress}
             onRecordingEnd={this.onRecordingEnd.bind(this)}
-            exposure={0.5}
+            // exposure={0.5}
             orientation={"portraitUpsideDown"}
+            hideShutterView={true}
             onFacesDetected={(val) => {
                 // console.log("VVVVVVV", val.faces[0].bounds)
                 // this.setState({
@@ -827,7 +858,7 @@ class RDScreen extends PureComponent {
                 //   faceObjectY: val.faces[0].bounds.origin.y,
                 // })
             }}
-            faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate} // Need to test
+            // faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate} // Need to test
             androidCameraPermissionOptions={{
               title: "Permission to use camera",
               message: "We need your permission to use your camera",

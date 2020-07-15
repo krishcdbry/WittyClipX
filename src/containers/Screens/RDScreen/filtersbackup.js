@@ -145,7 +145,7 @@ class RDScreen extends PureComponent {
           toValue: 1,
           duration: 3000,
           easing: Easing.linear,
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS === "android",
         })
       );
       this.animatedVal.start();
@@ -183,7 +183,7 @@ class RDScreen extends PureComponent {
             Animated.timing(this.state.songPickerAnimatedValue, {
               toValue: 1,
               duration: 500,
-              useNativeDriver: true,
+              useNativeDriver: Platform.OS === "android",
             }),
           ]).start();
         } else {
@@ -191,7 +191,7 @@ class RDScreen extends PureComponent {
             Animated.timing(this.state.songPickerAnimatedValue, {
               toValue: 0,
               duration: 500,
-              useNativeDriver: true,
+              useNativeDriver: Platform.OS === "android",
             }),
           ]).start();
         }
@@ -570,7 +570,7 @@ class RDScreen extends PureComponent {
       toValue: 1,
       duration: 225,
       easing: Easing.bezier(0.0, 0.0, 0.2, 1),
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS === "android",
     }).start();
 
     if (this.state.pause) {

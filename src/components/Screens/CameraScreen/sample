@@ -100,7 +100,7 @@ class CameraScreen extends PureComponent {
             Animated.timing(this.state.songPickerAnimatedValue, {
               toValue: 1,
               duration: 500,
-              useNativeDriver: true,
+              useNativeDriver: Platform.OS === "android",
             }),
           ]).start();
         } else {
@@ -108,7 +108,7 @@ class CameraScreen extends PureComponent {
             Animated.timing(this.state.songPickerAnimatedValue, {
               toValue: 0,
               duration: 500,
-              useNativeDriver: true,
+              useNativeDriver: Platform.OS === "android",
             }),
           ]).start();
         }

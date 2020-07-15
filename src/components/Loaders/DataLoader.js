@@ -29,7 +29,7 @@ const DataLoader = ({ loadingText }) => {
         duration: 500,
         easing: Easing.Bounce,
         repeat: true,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS === "android",
       }).start(() => {
         animate(count + 1);
       }),
