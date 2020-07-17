@@ -22,6 +22,7 @@ const ScreenWidth = Dimensions.get("window").width;
 const ScreenHeight = Dimensions.get("window").height;
 
 const ProfileScreen = ({ navigation }) => {
+  const [following, setFollowing] = useState(false);
   const [trendingVideos, setTrendingVideos] = useState([]);
 
   const fetchVideos = async () => {
@@ -115,12 +116,25 @@ const ProfileScreen = ({ navigation }) => {
                 </Text>
               </View>
             </View>
-            <TouchableHighlight
-              style={styles.followingContainer}
-              onPress={() => {}}
+            {following ? (
+              <TouchableHighlight
+              style={[styles.followContainer, styles.followingContainer]}
+              onPress={() => {
+                setFollowing(false);
+              }}
             >
-              <Text style={styles.followingButtonText}> Follow </Text>
+              <Text style={[styles.followButtonText, styles.followingButtonText]}> Following </Text>
             </TouchableHighlight>
+            ) : (
+              <TouchableHighlight
+                style={styles.followContainer}
+                onPress={() => {
+                  setFollowing(true);
+                }}
+              >
+                <Text style={styles.followButtonText}> Follow </Text>
+              </TouchableHighlight>
+            )}
           </View>
         </View>
       </View>
@@ -196,7 +210,7 @@ const styles = StyleSheet.create({
     width: ScreenWidth,
     height: ScreenHeight
   },
-  followingContainer: {
+  followContainer: {
     backgroundColor: "#FF544D",
     display: "flex",
     justifyContent: "center",
@@ -213,11 +227,17 @@ const styles = StyleSheet.create({
     shadowRadius: 70,
     elevation: 50,
   },
-  followingButtonText: {
+  followingContainer: {
+    backgroundColor: "#FFFFFF",
+  },
+  followButtonText: {
     fontSize: 15,
     color: "#fff",
     fontFamily: "Capriola-Regular",
     fontWeight: "400",
+  },
+  followingButtonText: {
+    color: "#000",
   },
   profileContainer: {
     paddingHorizontal: 16,

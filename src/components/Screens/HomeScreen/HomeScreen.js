@@ -20,14 +20,14 @@ const HomeScreen = ({ navigation }) => {
   }, [navigation]);
 
   return (
-    <TabBar style={CommonStyles.darkBackground}>
+    <TabBar style={CommonStyles.darkBackground} navigation={navigation}>
       <TabBar.Item
         icon={require("../../../../assets/images/icons/home.png")}
         selectedIcon={require("../../../../assets/images/icons/home-active.png")}
         title="Tab1"
         screenBackgroundColor={CommonStyles.darkBackground}
       >
-        <HomeTab navigation={navigation}  />
+        <HomeTab navigation={navigation} />
       </TabBar.Item>
       <TabBar.Item
         icon={require("../../../../assets/images/icons/tv.png")}

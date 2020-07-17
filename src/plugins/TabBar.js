@@ -42,8 +42,8 @@ export default class TabBar extends Component{
             throw new Error('Three tab should be work.');
         }
         this.state = {
-            selectedIndex: 1,
-            defaultPage: 1,
+            selectedIndex: 0,
+            defaultPage: 0,
             navFontSize: 12,
             navTextColor: 'rgb(148, 148, 148)',
             navTextColorSelected: 'rgb(51, 163, 244)',
@@ -94,52 +94,64 @@ export default class TabBar extends Component{
             ]}>
 
                 {children[selectedIndex]}
-
-                <View style={[styles.content]}>
-                    <View style={styles.subContent}>
-                        {
-                            React.Children.map(children,  (child,i) => {
-                                const imgSrc = selectedIndex === i && showIcon ?
-                                    <View style={styles.circle}>
+                <View style={{width: '100%', position: 'relative'}}>
+                    <View style={[styles.content, {width: '76%', margin: 12, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 200}]}>
+                        <View style={styles.subContent}>
+                            {
+                                React.Children.map(children,  (child,i) => {
+                                    const imgSrc = selectedIndex === i && showIcon ?
+                                        <View style={styles.circle}>
+                                            <Image
+                                                style={styles.navImage}
+                                                resizeMode="cover"
+                                                source={child.props.selectedIcon}
+                                            />
+                                        </View>
+                                    :
                                         <Image
                                             style={styles.navImage}
                                             resizeMode="cover"
-                                            source={child.props.selectedIcon}
-                                        />
-                                    </View>
-                                :
-                                    <Image
-                                        style={styles.navImage}
-                                        resizeMode="cover"
-                                        source={child.props.icon}
-                                    />;
-                                return (
-                                    <TouchableHighlight
-                                        key={i}
-                                        underlayColor={'transparent'}
-                                        style={styles.navItem}
-                                        onPress={() => this.update(i)}
-                                    >
-                                        {imgSrc}
-                                    </TouchableHighlight>
-                                );
-                            })
-                        }
+                                            source={child.props.icon}
+                                        />;
+                                    return (
+                                        <TouchableHighlight
+                                            key={i}
+                                            underlayColor={'transparent'}
+                                            style={styles.navItem}
+                                            onPress={() => this.update(i)}
+                                        >
+                                            {imgSrc}
+                                        </TouchableHighlight>
+                                    );
+                                })
+                            }
+                        </View>
+                        <Svg version="1.1" id="bottom-bar" x="0px" y="0px" width="100%" height="100" viewBox="0 0 1092 200" space="preserve">
+                            <AnimatedPath
+                                fill={bgNavBar ? bgNavBar : 'transparent'}
+                                stroke={stroke ? stroke : 'transparent'}
+                            />
+                            <AnimatedCircle
+                                ref={ ref => this._myCircle = ref }
+                                fill={bgNavBarSelector ? bgNavBarSelector : '#FF544D'}
+                                stroke={stroke ? stroke : '#FF544D'}
+                                cx="211" cy="100"
+                                r="8"
+                            />
+                        </Svg>
                     </View>
-                    <Svg version="1.1" id="bottom-bar" x="0px" y="0px" width="100%" height="100" viewBox="0 0 1092 200" space="preserve">
-                        <AnimatedPath
-                            fill={bgNavBar ? bgNavBar : 'transparent'}
-                            stroke={stroke ? stroke : 'transparent'}
-                           
-                        />
-                        <AnimatedCircle
-                            ref={ ref => this._myCircle = ref }
-                            fill={bgNavBarSelector ? bgNavBarSelector : '#FF544D'}
-                            stroke={stroke ? stroke : '#FF544D'}
-                            cx="546" cy="100"
-                            r="8"
-                        />
-                    </Svg>
+                    <View style={[styles.content, {width: '15%', margin: 12, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 200, position: 'absolute', right: 0}]}>
+                        <TouchableHighlight
+                            style={styles.addVideo}
+                            onPress={() => this.props.navigation.navigate("CameraScreen")}
+                        >
+                            <Image
+                                style={styles.navImage2}
+                                resizeMode="cover"
+                                source={require("../../assets/images/add.png")}
+                            />
+                        </TouchableHighlight>
+                    </View>
                 </View>
             </View>
         );
@@ -218,6 +230,17 @@ const styles = StyleSheet.create({
     navImage: {
         width: 19,
         height: 19,
+    },
+    addVideo: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 62,
+        height: 62,
+    },
+    navImage2: {
+        width: 30,
+        height: 30,
     },
     circle: {
         bottom: 0,
