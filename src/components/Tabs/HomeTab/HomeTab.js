@@ -50,7 +50,7 @@ function HomeTab({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={[Styles.recordIconContainer, Styles.profileIconContainer]}
-          onPress={() => navigation.navigate("CameraScreen")}
+          onPress={() => navigation.navigate("ProfileScreen")}
         >
           <Image
             source={{

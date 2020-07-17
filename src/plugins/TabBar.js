@@ -134,10 +134,10 @@ export default class TabBar extends Component{
                         />
                         <AnimatedCircle
                             ref={ ref => this._myCircle = ref }
-                            fill={bgNavBarSelector ? bgNavBarSelector : '#343434'}
-                            stroke={stroke ? stroke : '#343434'}
+                            fill={bgNavBarSelector ? bgNavBarSelector : '#FF544D'}
+                            stroke={stroke ? stroke : '#FF544D'}
                             cx="546" cy="100"
-                            r="14"
+                            r="8"
                         />
                     </Svg>
                 </View>

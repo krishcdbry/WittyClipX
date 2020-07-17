@@ -8,6 +8,7 @@ import LandingScreen from './containers/Screens/LandingScreen/LandingScreen';
 import HomeScreen from './containers/Screens/HomeScreen/HomeScreen';
 import CameraScreen from './containers/Screens/CameraScreen/CameraScreen';
 import RDScreen from './containers/Screens/RDScreen/RDScreen';
+import ProfileScreen from './containers/Screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +21,7 @@ const App = () => {
         barStyle="dark-content"
       />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="RDScreen">
+        <Stack.Navigator initialRouteName="LandingScreen">
           <Stack.Screen
             name="LandingScreen"
             component={LandingScreen}
@@ -39,6 +40,11 @@ const App = () => {
           <Stack.Screen
             name="RDScreen"
             component={RDScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
