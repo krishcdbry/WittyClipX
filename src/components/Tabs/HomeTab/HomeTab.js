@@ -6,14 +6,23 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  LayoutAnimation,
+  UIManager
 } from "react-native";
 
 import PlayIcon from "../../../../assets/images/icons/play.png";
+import OptionsIcon from "../../../../assets/images/icons/options.png";
 import { screenDimensions } from "../../../utils/global";
+import Animated from "react-native-reanimated";
 
 function HomeTab({ navigation }) {
   const [trendingPeople, setTrendingPeople] = useState([]);
   const [trendingVideos, setTrendingVideos] = useState([]);
+  const [treningMenu, setTrendingMenu] = useState([
+    "Trending today", "Trending all time", "Trending tags", "Trending audio", "Trending music", "Trending topic"
+  ]);
+
+  const [expanded, setExpanded] = useState(false);
 
   const fetchVideos = () => {
     setTrendingPeople([
@@ -247,6 +256,9 @@ function HomeTab({ navigation }) {
   };
 
   useEffect(() => {
+    if (Platform.OS === 'android') {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
     fetchVideos();
   }, []);
 
@@ -256,58 +268,87 @@ function HomeTab({ navigation }) {
 
   const onTrendingSizeChange = () => {};
 
+  const changeLayout = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpanded(!expanded);
+  };
+
   return (
     <>
+      <View style={[{ height: expanded ? null : 0 }, Styles.headerMenuContainer]}>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          scrollEnabled={true}
+          onContentSizeChange={onTrendingSizeChange}
+        >
+          <View style={Styles.headerMenuContent}>
+            {
+              treningMenu.map(item => (
+                <TouchableOpacity
+                  key={item}
+                  onPress={() => {}}
+                  style={Styles.headerMenuListItem}
+                >
+                  <Text style={Styles.headerMenuListItemText}>{item}</Text>
+                </TouchableOpacity>
+              ))
+            }
+          </View>
+        </ScrollView>
+      </View>
       <View style={Styles.header}>
         <TouchableOpacity
-          style={[Styles.recordIconContainer, Styles.profileIconContainer]}
-          onPress={() => navigation.navigate("ProfileScreen")}
+          onPress={changeLayout}
         >
-          <Image
-            source={{
-              uri:
-                "https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_pic/rinacdbrykiF5QB94rMp3u7qVrtFceRHKSekRIW52fL81580635285.jpg",
-            }}
-            style={{
-              width: 45,
-              height: 45,
-              borderRadius: 120,
-            }}
-          />
+          <Image source={OptionsIcon} style={Styles.headerMenuIcon} />
         </TouchableOpacity>
-        <Text style={Styles.homeTitle}>Welcome !</Text>
+        <Text style={Styles.homeTitle}>Wittyclip</Text>
       </View>
       <ScrollView
         scrollEnabled={true}
         onContentSizeChange={onTrendingSizeChange}
-        style={{
-          marginBottom: 57,
-          paddingBottom: 50,
-        }}
+        style={Styles.mainContainerScrollView}
       > 
         <View style={Styles.mainContainer}>
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            scrollEnabled={true}
-            onContentSizeChange={onTrendingSizeChange}
-          >
-            <View style={Styles.peopleTrendingFeed}>
-              {trendingPeople.map((item, idx) => {
-                return (
-                  <TouchableOpacity key={`${idx}-trending-people`} style={Styles.peopleTrendingCard}>
-                    <Image
-                      source={{ uri: item.pic }}
-                      style={Styles.trendingPic}
-                    />
-                    <Text style={Styles.trendingUsername}>
-                      {item.username.length > 10 ? item.username.substr(0, 10)+'..' : item.username}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
+          <View style={Styles.peopleList}>
+            <View style={Styles.myProfile}>
+              <TouchableOpacity
+                style={Styles.profileIconContainer}
+                onPress={() => navigation.navigate("ProfileScreen")}
+              >
+                <Image
+                  source={{
+                    uri:
+                      "https://s3-ap-south-1.amazonaws.com/hearty-media-uploads/pics_note/note_pic/rinacdbrykiF5QB94rMp3u7qVrtFceRHKSekRIW52fL81580635285.jpg",
+                  }}
+                  style={Styles.trendingPic}
+                />
+              </TouchableOpacity>
             </View>
-          </ScrollView>
+            <View style={Styles.peopleTrendList}>
+              <ScrollView
+                style={Styles.peopleTrendListScroll}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                scrollEnabled={true}
+                onContentSizeChange={onTrendingSizeChange}
+              >
+                <View style={Styles.peopleTrendingFeed}>
+                  {trendingPeople.map((item, idx) => {
+                    return (
+                      <TouchableOpacity key={`${idx}-trending-people`} style={Styles.peopleTrendingCard}>
+                        <Image
+                          source={{ uri: item.pic }}
+                          style={Styles.trendingPic}
+                        />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </ScrollView>
+            </View>
+          </View>
           <Text style={Styles.homeTitle}>Trending</Text>
           <ScrollView
             horizontal={true}
@@ -344,32 +385,53 @@ function HomeTab({ navigation }) {
 
 const Styles = StyleSheet.create({
   profileIconContainer: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 7,
-    },
-    shadowOpacity: 0.41,
-    shadowRadius: 9.11,
-    elevation: 14,
-    zIndex: 1, 
+    borderTopRightRadius: 200,
+    borderBottomRightRadius: 200,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    padding: 16,
+    width: 100,
+  },
+  headerMenuContainer: {
+    overflow: 'hidden', 
+    marginTop: 36
+  },
+  headerMenuContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+  },
+  headerMenuListItem: {
+    padding: 16, 
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    marginRight: 8,
+    borderRadius: 8
+  },
+  headerMenuListItemText: {
+    color: '#ffffff'
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    position: "absolute",
-    top: 50,
-    left: 30,
+    padding: 16,
     zIndex: 1, 
+  },
+  headerMenuIcon: {
+    width: 24,
+    height: 20,
+    marginTop: 3,
+    padding: 8
+  },
+  peopleList: {
+    flexDirection: 'row',
   },
   trendingPic: {
     height: 64,
     width: 64,
     maxHeight: 64,
     maxWidth: 64,
-    borderRadius: 26,
+    borderRadius: 200,
     borderWidth: 1,
-    borderColor: "#aaa",
+    borderColor: "#000",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
@@ -390,22 +452,32 @@ const Styles = StyleSheet.create({
     paddingLeft: 20,
     marginTop: 5,
   },
-  mainContainer: {
-    marginTop: 110,
+  mainContainerScrollView: {
+    marginBottom: 57,
+    paddingBottom: 50
   },
+  peopleTrendList: {
+    borderTopLeftRadius: 200,
+    borderBottomLeftRadius: 200,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    marginLeft: 16,
+    marginBottom: 16,
+    paddingLeft: 16,
+  },
+  peopleTrendListScroll: {},
   peopleTrendingFeed: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingHorizontal: 10,
-    marginRight: 16,
+    paddingVertical: 16,
+    borderTopLeftRadius: 200,
+    borderBottomLeftRadius: 200,
   },
   peopleTrendingCard: {
     position: "relative",
     borderRadius: 120,
-    height: 110,
-    marginLeft: 20,
+    marginRight: 16,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -488,7 +560,7 @@ const Styles = StyleSheet.create({
     maxHeight: 20,
     fontFamily: "Capriola-Regular",
     marginBottom: 8,
-  }
+  },
 });
 
 export default HomeTab;
