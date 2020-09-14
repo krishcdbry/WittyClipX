@@ -7,9 +7,9 @@ import {
     Image,
 } from 'react-native';
 import React, { Component } from 'react';
-
 import Svg,{ Circle, Path } from 'react-native-svg';
-import { screenDimensions } from '../utils/global';
+
+import { Colors } from '../styles';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -71,7 +71,7 @@ export default class TabBar extends Component{
     }
 
     render() {
-        const { children, bgNavBar, bgNavBarSelector, stroke } = this.props;
+        const { children, bgNavBar, bgNavBarSelector, stroke, backgroundColor, defaultColor, selectedColor } = this.props;
         const {
             selectedIndex,
             navFontSize,
@@ -88,31 +88,16 @@ export default class TabBar extends Component{
         }
 
         return (
-            <View style={[styles.container,this.props.style, children[this.state.selectedIndex].props.screenBackgroundColor ?
-                children[this.state.selectedIndex].props.screenBackgroundColor :
-                '#008080',
-            ]}>
-
+            <View style={[styles.container,this.props.style, backgroundColor]}>
                 {children[selectedIndex]}
                 <View style={{width: '100%', position: 'relative'}}>
-                    <View style={[styles.content, {width: '76%', margin: 12, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 200}]}>
+                    <View style={[styles.content, {width: '76%', margin: 12, backgroundColor, borderRadius: 200}]}>
                         <View style={styles.subContent}>
                             {
                                 React.Children.map(children,  (child,i) => {
-                                    const imgSrc = selectedIndex === i && showIcon ?
-                                        <View style={styles.circle}>
-                                            <Image
-                                                style={styles.navImage}
-                                                resizeMode="cover"
-                                                source={child.props.selectedIcon}
-                                            />
-                                        </View>
-                                    :
-                                        <Image
-                                            style={styles.navImage}
-                                            resizeMode="cover"
-                                            source={child.props.icon}
-                                        />;
+                                    const Icon = child.props.icon;
+                                    const imgSrc = <Icon width={18} height={18} fill={selectedIndex === i ? selectedColor : defaultColor} />;
+
                                     return (
                                         <TouchableHighlight
                                             key={i}
@@ -128,19 +113,19 @@ export default class TabBar extends Component{
                         </View>
                         <Svg version="1.1" id="bottom-bar" x="0px" y="0px" width="100%" height="100" viewBox="0 0 1092 200" space="preserve">
                             <AnimatedPath
-                                fill={bgNavBar ? bgNavBar : 'transparent'}
-                                stroke={stroke ? stroke : 'transparent'}
+                                fill={bgNavBar ? bgNavBar : Colors.transparent}
+                                stroke={stroke ? stroke : Colors.transparent}
                             />
                             <AnimatedCircle
                                 ref={ ref => this._myCircle = ref }
-                                fill={bgNavBarSelector ? bgNavBarSelector : '#FF544D'}
-                                stroke={stroke ? stroke : '#FF544D'}
+                                fill={bgNavBarSelector ? bgNavBarSelector : selectedColor}
+                                stroke={stroke ? stroke : selectedColor}
                                 cx="211" cy="100"
                                 r="8"
                             />
                         </Svg>
                     </View>
-                    <View style={[styles.content, {width: '15%', margin: 12, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 200, position: 'absolute', right: 0}]}>
+                    <View style={[styles.content, {width: '15%', margin: 12, backgroundColor, borderRadius: 200, position: 'absolute', right: 0}]}>
                         <TouchableHighlight
                             style={styles.addVideo}
                             onPress={() => this.props.navigation.navigate("CameraScreen")}
@@ -229,6 +214,10 @@ const styles = StyleSheet.create({
     },
     navImage: {
         width: 19,
+        height: 19,
+    },
+    navImage3: {
+        width: 30,
         height: 19,
     },
     addVideo: {

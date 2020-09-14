@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,13 +8,17 @@ import {
   Dimensions,
   Animated,
   Easing,
-  TouchableNativeFeedback,
   TouchableHighlight,
 } from "react-native";
 import Video, { FilterType } from "react-native-video";
 import Swiper from "react-native-swiper";
-
 import DeviceInfo from "react-native-device-info";
+
+import Button from '../../../atoms/Button';
+import Clickable from '../../../atoms/Clickable';
+
+import { Colors, Fonts } from '../../../styles';
+import { Device } from '../../../utils';
 
 import icon from "../../../../assets/images/logom.png";
 import thumb from "../../../../assets/images/thumb.jpg";
@@ -28,12 +32,13 @@ const clip1 = require("../../../../assets/clips/splash1.mp4");
 const clip2 = require("../../../../assets/clips/splash2.mp4");
 const clip3 = require("../../../../assets/clips/splash3.mp4");
 
-const ScreenWidth = Dimensions.get("window").width;
-const ScreenHeight = Dimensions.get("window").height;
 const videos = [clip0, clip1, clip2, clip3];
 const videosLength = videos.length;
 
-const LandingScreen = ({ navigation }) => {
+const LandingScreen = ({ navigation, theme }) => {
+
+  console.log("theme", theme);
+
   const [activeVideo, setActiveVideo] = useState(0);
   const [pauseVideo, setPauseVideo] = useState(false);
   const y_translate = new Animated.Value(0);
@@ -123,29 +128,27 @@ const LandingScreen = ({ navigation }) => {
           <Text style={styles.desc}>#Play</Text>
         </View>
         <View style={styles.notif}>
-          <Text style={{ color: "#fff", fontSize: 12 }}>On the way</Text>
+          <Text style={{ color: Colors.white, fontSize: 12 }}>On the way</Text>
         </View>
         <View style={styles.thumbs}>
           <Image source={thumb} style={styles.thumbnail} />
           <Image source={thumb1} style={styles.thumbnail} />
           <Image source={thumb2} style={styles.thumbnail} />
         </View>
-        <TouchableHighlight
+        <Button
+          name="Join Waitlist !"
           style={styles.notifyContainer}
           onPress={() => navigation.navigate("HomeScreen")}
         >
-          <Text style={styles.notifyButtonText}> Join Waitlist ! </Text>
-        </TouchableHighlight>
+        </Button>
         <View style={styles.waitinglistCount}>
           <Text style={styles.count}> 4.7k </Text>
           <Text style={styles.countText}> Joined </Text>
         </View>
         
-        <View style={styles.playPauseIconContainer}>
-          <TouchableNativeFeedback  onPress={() => setPauseVideo(!pauseVideo)}>
-            <Image source={pauseVideo ? play : pause} style={styles.playpauseIcon}/>
-          </TouchableNativeFeedback>
-        </View>
+        <Clickable style={styles.playPauseIconContainer} onPress={() => setPauseVideo(!pauseVideo)}>
+          <Image source={pauseVideo ? play : pause} style={styles.playPauseIcon}/>
+        </Clickable>
       </View>
 
       <Swiper
@@ -180,7 +183,7 @@ const LandingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: ScreenHeight,
+    height: Device.ScreenHeight,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -189,8 +192,8 @@ const styles = StyleSheet.create({
   },
   desc: {
     fontSize: 42,
-    color: "#fff",
-    fontFamily: "Capriola-Regular",
+    color: Colors.white,
+    fontFamily: Fonts.CapriolaRegular,
     fontWeight: "400",
   },
   thumbs: {
@@ -208,8 +211,8 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     margin: 0 - 5,
     borderWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#000",
+    borderColor: Colors.white,
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
   },
@@ -223,7 +226,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    // backgroundColor: "#ccc"
   },
   logoAnimate: {
     top: 0,
@@ -232,11 +234,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 80,
     right: 50,
-    backgroundColor: "#22a0ce",
+    backgroundColor: Colors.seaBlue,
     borderRadius: 15,
     paddingVertical: 3,
     paddingHorizontal: 7,
-    color: "#fff",
+    color: Colors.white,
   },
   logo: {
     height: 72,
@@ -250,39 +252,26 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 25,
     fontWeight: "bold",
-    color: "#fff",
+    color: Colors.white,
     marginVertical: 15,
-    fontFamily: "Capriola-Regular",
+    fontFamily: Fonts.CapriolaRegular,
     fontWeight: "400",
   },
   notifyContainer: {
-    backgroundColor: "#FF544D",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 50,
-    width: 120,
-    borderRadius: 120,
     position: "absolute",
     bottom: 50,
     right: 30,
-    borderColor: "#191919",
-    elevation: 50,
-    shadowColor: "#fff",
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.5,
-    shadowRadius: 70,
-    elevation: 50,
   },
   notifyButtonText: {
     fontSize: 15,
-    color: "#fff",
-    fontFamily: "Capriola-Regular",
+    padding: 16,
+    textAlign: 'center',
+    color: Colors.white,
+    fontFamily: Fonts.CapriolaRegular,
     fontWeight: "400",
   },
   view: {
-    // backgroundColor: "rgba(0,0,0,0.45)",
-    backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: Colors.transparent2,
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start",
@@ -293,35 +282,35 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     top: 0,
-    width: ScreenWidth,
+    width: Device.ScreenWidth,
     paddingTop: 30,
     paddingBottom: 20,
   },
   wrLandingScreener: {},
   clip: {
     flex: 1,
-    backgroundColor: "#000000",
+    backgroundColor: Colors.black,
   },
   waitinglistCount: {
     marginTop: 20,
     marginLeft: 35,
-    fontFamily: "Capriola-Regular",
+    fontFamily: Fonts.CapriolaRegular,
   },
   count: {
-    color: "#fff",
+    color: Colors.white,
     fontSize: 24,
   },
   countText: {
-    color: "#fff",
+    color: Colors.white,
     fontSize: 18,
-    fontFamily: "Capriola-Regular",
+    fontFamily: Fonts.CapriolaRegular,
   },
   playPauseIconContainer: {
     position: "absolute",
     bottom: 120,
     right: 30,
   },
-  playpauseIcon: {
+  playPauseIcon: {
     width: 20,
     height: 20,
   }

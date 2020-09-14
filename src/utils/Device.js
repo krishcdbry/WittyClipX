@@ -1,14 +1,9 @@
-import {Dimensions} from 'react-native';
+import { Dimensions } from 'react-native';
 
 const ScreenWidth = Dimensions.get("window").width;
 const ScreenHeight = Dimensions.get("window").height;
 
-const screenDimensions = {
+export default {
     ScreenWidth,
     ScreenHeight
-}
-
-
-export {
-    screenDimensions
-}
+};

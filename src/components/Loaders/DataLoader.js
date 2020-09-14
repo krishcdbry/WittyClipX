@@ -9,8 +9,6 @@ import {
 } from "react-native";
 
 import icon from "../../../assets/images/logom.png";
-import { screenDimensions } from "../../utils/global";
-import CommonStyles from "../../styles/common";
 
 const DataLoader = ({ loadingText }) => {
   const y_translate = new Animated.Value(0);

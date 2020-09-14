@@ -1,49 +1,44 @@
 import React, { useEffect } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import TabBar from "../../../plugins/TabBar";
+import HomeTab from "../../../containers/Tabs/HomeTab";
+import TvTab from "../../../containers/Tabs/TvTab";
 
-// import TabBar from '../Reuse/TabBar';
-import HomeTab from "../../../containers/Tabs/HomeTab/HomeTab";
-import TvTab from "../../../containers/Tabs/TvTab/TvTab";
-
-import { View, StyleSheet } from "react-native";
+import HomeIcon from '../../../../assets/images/icons/home.svg';
+import TvIcon from '../../../../assets/images/icons/tv.svg';
+import SearchIcon from '../../../../assets/images/icons/search.svg';
 
 import { clearStack } from "../../../utils/navigation";
-import { screenDimensions } from "../../../utils/global";
-import CommonStyles from "../../../styles/common";
 
-const Tab = createBottomTabNavigator();
-
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, theme }) => {
   useEffect(() => {
     clearStack(navigation, "HomeScreen");
   }, [navigation]);
 
   return (
-    <TabBar style={CommonStyles.darkBackground} navigation={navigation}>
+    <TabBar
+      backgroundColor={theme.transparentBackgroundColor} 
+      defaultColor={theme.tabIconColor}
+      selectedColor={theme.tabIconActiveColor}
+      navigation={navigation}
+    >
       <TabBar.Item
-        icon={require("../../../../assets/images/icons/home.png")}
-        selectedIcon={require("../../../../assets/images/icons/home-active.png")}
+        icon={HomeIcon}
         title="Tab1"
-        screenBackgroundColor={CommonStyles.darkBackground}
       >
         <HomeTab navigation={navigation} />
       </TabBar.Item>
       <TabBar.Item
-        icon={require("../../../../assets/images/icons/tv.png")}
-        selectedIcon={require("../../../../assets/images/icons/tv-active.png")}
+        icon={TvIcon}
         title="Tab2"
-        screenBackgroundColor={CommonStyles.darkBackground}
       >
         <TvTab navigation={navigation}/>
       </TabBar.Item>
       <TabBar.Item
-        icon={require("../../../../assets/images/icons/search.png")}
-        selectedIcon={require("../../../../assets/images/icons/search-active.png")}
+        icon={SearchIcon}
         title="Tab3"
-        screenBackgroundColor={CommonStyles.darkBackground}
       >
-        <View />
+        <TvTab navigation={navigation}/>
       </TabBar.Item>
     </TabBar>
   );

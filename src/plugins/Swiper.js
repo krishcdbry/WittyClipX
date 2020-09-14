@@ -216,8 +216,8 @@ export default class Swiper extends Component {
 
   UNSAFE_componentWillUpdate(nextProps, nextState) {
     // If the index has changed, we notify the parent via the onIndexChanged callback
-    if (this.state.index !== nextState.index)
-      this.props.onIndexChanged(nextState.index)
+    // if (this.state.index !== nextState.index)
+    //   this.props.onIndexChanged(nextState.index)
   }
 
   componentDidUpdate(prevProps) {

@@ -28,8 +28,6 @@ import RNFS from "react-native-fs";
 import FileViewer from "react-native-file-viewer";
 import filters from 'react-native-image-filter-kit';
 
-console.log(filters);
-
 import {
   requestMultiple,
   PERMISSIONS,
@@ -52,7 +50,7 @@ import Logo from "../../../../assets/images/logom.png";
 import White from "../../../../assets/images/white.png";
 
 import ProgressBar from "../../../plugins/ProgressBar";
-import { screenDimensions } from "../../../utils/global";
+import { Device } from "../../../utils";
 import CommonStyles from "../../../styles/common";
 import SongsList from "../../../components/SongsList/SongsList";
 import ProcessingLoader from "../../../components/Loaders/ProcessingLoader";
@@ -79,7 +77,7 @@ class RDScreen extends PureComponent {
       showSongPicker: false,
       songPickerAnimatedValue: new Animated.Value(0),
       videoReady: false,
-      screenHeight: screenDimensions.ScreenHeight,
+      screenHeight: Device.ScreenHeight,
       finalVideoUrl: null,
       flashMode: RNCamera.Constants.FlashMode.off,
       width: 50,
@@ -115,7 +113,7 @@ class RDScreen extends PureComponent {
 
   componentDidMount() {
     this.setState({
-      width: screenDimensions.ScreenWidth / 2,
+      width: Device.ScreenWidth / 2,
     });
     requestMultiple([
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
@@ -788,7 +786,7 @@ class RDScreen extends PureComponent {
             <Image
               source={{ uri: `${finalVideoThumbPath}${idx}.jpg` }}
               style={[styles.videoThumb, {
-                width: (screenDimensions.ScreenWidth-50)/10
+                width: (Device.ScreenWidth-50)/10
               }]}
             />
           </View>
@@ -797,7 +795,7 @@ class RDScreen extends PureComponent {
       return thumbs;
     };
 
-    const imageStyle = { width: screenDimensions.ScreenWidth, height: 900, opacity: 0.55 }
+    const imageStyle = { width: Device.ScreenWidth, height: 900, opacity: 0.55 }
 
     console.log("FFFF", filters["_1977"])
 
@@ -882,8 +880,8 @@ class RDScreen extends PureComponent {
             left: 0,
             bottom: 0,
             right: 0,
-            width: screenDimensions.ScreenWidth, 
-            height: screenDimensions.ScreenHeight
+            width: Device.ScreenWidth, 
+            height: Device.ScreenHeight
           }
         } />
 
@@ -1191,7 +1189,7 @@ class RDScreen extends PureComponent {
                         opacity: 0.2,
                         paddingHorizontal: 17,
                       }}
-                      sliderLength={screenDimensions.ScreenWidth - 65}
+                      sliderLength={Device.ScreenWidth - 65}
                       onValuesChange={(val) => {
                         this.setState({
                           finalVideoCurrentTime:
@@ -1320,7 +1318,7 @@ const styles = StyleSheet.create({
   progressBar: {
     position: "absolute",
     bottom: 10,
-    left: screenDimensions.ScreenWidth / 2 - 50,
+    left: Device.ScreenWidth / 2 - 50,
     zIndex: 10,
     shadowColor: "#fff",
     shadowOffset: {
@@ -1371,7 +1369,7 @@ const styles = StyleSheet.create({
     zIndex: 90,
     padding: 10,
     paddingTop: 20,
-    height: screenDimensions.ScreenHeight,
+    height: Device.ScreenHeight,
     backgroundColor: "#202020",
     // borderTopLeftRadius: 30,
     // borderTopRightRadius: 30,
@@ -1415,8 +1413,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    width: screenDimensions.ScreenWidth,
-    height: screenDimensions.screenHeight,
+    width: Device.ScreenWidth,
+    height: Device.screenHeight,
     zIndex: 120,
     backgroundColor: "#000",
     elevation: 5,
@@ -1475,7 +1473,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 120,
-    width: screenDimensions.ScreenWidth,
+    width: Device.ScreenWidth,
     paddingHorizontal: 15,
     backgroundColor: "#202020",
     display: "flex",
@@ -1532,7 +1530,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   thumbSliderThumbs: {
-    width: screenDimensions.ScreenWidth - 40,
+    width: Device.ScreenWidth - 40,
     paddingHorizontal: 10,
     overflow: "hidden",
     display: "flex",

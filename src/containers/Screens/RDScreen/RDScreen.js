@@ -50,8 +50,8 @@ import Logo from "../../../../assets/images/logom.png";
 import White from "../../../../assets/images/white.png";
 
 import ProgressBar from "../../../plugins/ProgressBar";
-import { screenDimensions } from "../../../utils/global";
-import CommonStyles from "../../../styles/common";
+import { Device } from "../../../utils";
+import CommonStyles from "../../../styles/Styles";
 import SongsList from "../../../components/SongsList/SongsList";
 import ProcessingLoader from "../../../components/Loaders/ProcessingLoader";
 import FinalProcessedVideo from "../../../components/FinalProcessedVideo/FinalProcessedVideo";
@@ -77,7 +77,7 @@ class RDScreen extends PureComponent {
       showSongPicker: false,
       songPickerAnimatedValue: new Animated.Value(0),
       videoReady: false,
-      screenHeight: screenDimensions.ScreenHeight,
+      screenHeight: Device.ScreenHeight,
       finalVideoUrl: null,
       finalVideoType: 'mp4',
       flashMode: RNCamera.Constants.FlashMode.off,
@@ -118,7 +118,7 @@ class RDScreen extends PureComponent {
     })
 
     this.setState({
-      width: screenDimensions.ScreenWidth / 2,
+      width: Device.ScreenWidth / 2,
     });
     requestMultiple([
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
@@ -815,7 +815,7 @@ class RDScreen extends PureComponent {
             <Image
               source={{ uri: `${finalVideoThumbPath}${idx}.jpg` }}
               style={[styles.videoThumb, {
-                width: (screenDimensions.ScreenWidth-50)/10
+                width: (Device.ScreenWidth-50)/10
               }]}
             />
           </View>
@@ -1154,7 +1154,7 @@ class RDScreen extends PureComponent {
                         opacity: 0.2,
                         paddingHorizontal: 17,
                       }}
-                      sliderLength={screenDimensions.ScreenWidth - 65}
+                      sliderLength={Device.ScreenWidth - 65}
                       onValuesChange={(val) => {
                         this.setState({
                           finalVideoCurrentTime:
@@ -1283,7 +1283,7 @@ const styles = StyleSheet.create({
   progressBar: {
     position: "absolute",
     bottom: 10,
-    left: screenDimensions.ScreenWidth / 2 - 50,
+    left: Device.ScreenWidth / 2 - 50,
     zIndex: 10,
     shadowColor: "#fff",
     shadowOffset: {
@@ -1334,7 +1334,7 @@ const styles = StyleSheet.create({
     zIndex: 90,
     padding: 10,
     paddingTop: 20,
-    height: screenDimensions.ScreenHeight,
+    height: Device.ScreenHeight,
     backgroundColor: "#202020",
     // borderTopLeftRadius: 30,
     // borderTopRightRadius: 30,
@@ -1378,8 +1378,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    width: screenDimensions.ScreenWidth,
-    height: screenDimensions.screenHeight,
+    width: Device.ScreenWidth,
+    height: Device.screenHeight,
     zIndex: 120,
     backgroundColor: "#000",
     elevation: 5,
@@ -1438,7 +1438,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 120,
-    width: screenDimensions.ScreenWidth,
+    width: Device.ScreenWidth,
     paddingHorizontal: 15,
     backgroundColor: "#202020",
     display: "flex",
@@ -1495,7 +1495,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   thumbSliderThumbs: {
-    width: screenDimensions.ScreenWidth - 40,
+    width: Device.ScreenWidth - 40,
     paddingHorizontal: 10,
     overflow: "hidden",
     display: "flex",

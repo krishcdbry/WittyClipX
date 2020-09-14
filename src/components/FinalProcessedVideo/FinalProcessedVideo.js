@@ -5,24 +5,19 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
-  TextInput,
   Platform,
-  TouchableWithoutFeedback,
   PermissionsAndroid,
   Button,
 } from "react-native";
-
 import {
   requestMultiple,
   PERMISSIONS,
-  RESULTS,
 } from "react-native-permissions";
 import CameraRoll from "@react-native-community/cameraroll";
-import { screenDimensions } from "../../utils/global";
 import Video, { FilterType } from "react-native-video";
-import CommonStyles from "../../styles/common";
 import Toast from "react-native-simple-toast";
+
+import { Device } from '../../utils';
 
 class FinalProcessedVideo extends PureComponent {
   constructor(props) {
@@ -88,8 +83,8 @@ class FinalProcessedVideo extends PureComponent {
           filter={FilterType.TONAL}
           //   paused={true}
           style={{
-            height: screenDimensions.ScreenHeight,
-            width: screenDimensions.ScreenWidth,
+            height: Device.ScreenHeight,
+            width: Device.ScreenWidth,
             backgroundColor: "#202020",
           }}
         />
@@ -122,8 +117,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     flexDirection: "column",
     backgroundColor: "#202020",
-    width: screenDimensions.ScreenWidth,
-    height: screenDimensions.ScreenHeight,
+    width: Device.ScreenWidth,
+    height: Device.ScreenHeight,
     zIndex: 9999,
     elevation: 10,
     top: 0,

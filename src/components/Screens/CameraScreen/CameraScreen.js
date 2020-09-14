@@ -6,16 +6,11 @@ import {
   TouchableOpacity,
   View,
   Image,
-  TextInput,
-  InteractionManager,
   Animated,
-  Dimensions,
-  ScrollView,
   Platform,
   Easing,
   TouchableWithoutFeedback,
   PermissionsAndroid,
-  DeviceEventEmitter,
 } from "react-native";
 import MultiSlider from "../../../plugins/MultiSlider";
 import { RNCamera } from "react-native-camera";
@@ -25,15 +20,11 @@ import RNVideoEditor from "react-native-video-editor";
 import Toast from "react-native-simple-toast";
 import AudioPlayer from "react-native-play-audio";
 import RNFS from "react-native-fs";
-import FileViewer from "react-native-file-viewer";
-
-
 import {
   requestMultiple,
   PERMISSIONS,
-  RESULTS,
 } from "react-native-permissions";
-import { RNFFmpeg, RNFFprobe, RNFFmpegConfig } from "react-native-ffmpeg";
+import { RNFFmpeg } from "react-native-ffmpeg";
 import CameraRoll from "@react-native-community/cameraroll";
 
 import SubmitRecord from "../../../../assets/images/icons/tick.png";
@@ -47,14 +38,14 @@ import Gallery from "../../../../assets/images/icons/gallery.png";
 import More from "../../../../assets/images/icons/more.png";
 import Back from "../../../../assets/images/icons/back.png";
 import Logo from "../../../../assets/images/logom.png";
-import White from "../../../../assets/images/white.png";
 
 import ProgressBar from "../../../plugins/ProgressBar";
-import { screenDimensions } from "../../../utils/global";
-import CommonStyles from "../../../styles/common";
 import SongsList from "../../../components/SongsList/SongsList";
 import ProcessingLoader from "../../../components/Loaders/ProcessingLoader";
 import FinalProcessedVideo from "../../../components/FinalProcessedVideo/FinalProcessedVideo";
+
+import { Device } from '../../../utils';
+import CommonStyles from "../../../styles/Styles";
 
 class CameraScreen extends PureComponent {
   constructor(props) {
@@ -77,7 +68,7 @@ class CameraScreen extends PureComponent {
       showSongPicker: false,
       songPickerAnimatedValue: new Animated.Value(0),
       videoReady: false,
-      screenHeight: screenDimensions.ScreenHeight,
+      screenHeight: Device.ScreenHeight,
       finalVideoUrl: null,
       finalVideoType: 'mp4',
       flashMode: RNCamera.Constants.FlashMode.off,
@@ -118,7 +109,7 @@ class CameraScreen extends PureComponent {
     })
 
     this.setState({
-      width: screenDimensions.ScreenWidth / 2,
+      width: Device.ScreenWidth / 2,
     });
     requestMultiple([
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
@@ -810,7 +801,7 @@ class CameraScreen extends PureComponent {
             <Image
               source={{ uri: `${finalVideoThumbPath}${idx}.jpg` }}
               style={[styles.videoThumb, {
-                width: (screenDimensions.ScreenWidth-50)/10
+                width: (Device.ScreenWidth-50)/10
               }]}
             />
           </View>
@@ -1149,7 +1140,7 @@ class CameraScreen extends PureComponent {
                         opacity: 0.2,
                         paddingHorizontal: 17,
                       }}
-                      sliderLength={screenDimensions.ScreenWidth - 65}
+                      sliderLength={Device.ScreenWidth - 65}
                       onValuesChange={(val) => {
                         this.setState({
                           finalVideoCurrentTime:
@@ -1278,7 +1269,7 @@ const styles = StyleSheet.create({
   progressBar: {
     position: "absolute",
     bottom: 10,
-    left: screenDimensions.ScreenWidth / 2 - 50,
+    left: Device.ScreenWidth / 2 - 50,
     zIndex: 10,
     shadowColor: "#fff",
     shadowOffset: {
@@ -1329,7 +1320,7 @@ const styles = StyleSheet.create({
     zIndex: 90,
     padding: 10,
     paddingTop: 20,
-    height: screenDimensions.ScreenHeight,
+    height: Device.ScreenHeight,
     backgroundColor: "#202020",
     // borderTopLeftRadius: 30,
     // borderTopRightRadius: 30,
@@ -1373,8 +1364,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    width: screenDimensions.ScreenWidth,
-    height: screenDimensions.screenHeight,
+    width: Device.ScreenWidth,
+    height: Device.screenHeight,
     zIndex: 120,
     backgroundColor: "#000",
     elevation: 5,
@@ -1433,7 +1424,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 120,
-    width: screenDimensions.ScreenWidth,
+    width: Device.ScreenWidth,
     paddingHorizontal: 15,
     backgroundColor: "#202020",
     display: "flex",
@@ -1490,7 +1481,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   thumbSliderThumbs: {
-    width: screenDimensions.ScreenWidth - 40,
+    width: Device.ScreenWidth - 40,
     paddingHorizontal: 10,
     overflow: "hidden",
     display: "flex",

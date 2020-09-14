@@ -12,13 +12,12 @@ import {
 } from "react-native";
 import Video, { FilterType } from "react-native-video";
 
+import { Device } from '../../../utils';
+
 import PlayIcon from "../../../../assets/images/icons/play.png";
 import Back from "../../../../assets/images/icons/back.png";
 
 const clip0 = require("../../../../assets/clips/splash2.mp4");
-
-const ScreenWidth = Dimensions.get("window").width;
-const ScreenHeight = Dimensions.get("window").height;
 
 const ProfileScreen = ({ navigation }) => {
   const [following, setFollowing] = useState(false);
@@ -138,7 +137,7 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: ScreenHeight,
+    height: Device.ScreenHeight,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -160,7 +159,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     top: 0,
-    width: ScreenWidth,
+    width: Device.ScreenWidth,
     paddingTop: 30,
     paddingBottom: 20,
   },
@@ -200,8 +199,8 @@ const styles = StyleSheet.create({
   },
   clip: {
     backgroundColor: "#000000",
-    width: ScreenWidth,
-    height: ScreenHeight
+    width: Device.ScreenWidth,
+    height: Device.ScreenHeight
   },
   followContainer: {
     backgroundColor: "#FF544D",
@@ -274,13 +273,13 @@ const styles = StyleSheet.create({
   },
   videoCard: {
     position: "relative",
-    width: ScreenWidth * 0.33,
-    height: ScreenWidth * 0.33,
+    width: Device.ScreenWidth * 0.33,
+    height: Device.ScreenWidth * 0.33,
     borderRadius: 20,
     marginHorizontal: 4,
   },
   premiumVideoCard: {
-    width: ScreenWidth * 0.45,
+    width: Device.ScreenWidth * 0.45,
   },
   videoCover: {
     width: "100%",
@@ -313,7 +312,7 @@ const styles = StyleSheet.create({
   postCountContainer: {
     backgroundColor: "rgba(0,0,0,0.45)",
     width: 80,
-    height: ScreenWidth * 0.33,
+    height: Device.ScreenWidth * 0.33,
     borderRadius: 20,
     marginHorizontal: 4,
   },

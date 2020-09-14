@@ -8,9 +8,9 @@ import {
   Easing,
 } from "react-native";
 
+import { Device } from '../../utils';
+
 import icon from "../../../assets/images/logom.png";
-import { screenDimensions } from "../../utils/global";
-import CommonStyles from "../../styles/common";
 
 const ProcessingLoader = ({ loadingText }) => {
   const y_translate = new Animated.Value(0);
@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    width: screenDimensions.ScreenWidth,
-    height: screenDimensions.ScreenHeight,
+    width: Device.ScreenWidth,
+    height: Device.ScreenHeight,
     backgroundColor: '#171717',
     display: "flex",
     justifyContent: "center",

@@ -14,16 +14,15 @@ import {
 import AudioPlayer from "react-native-play-audio";
 import AsyncStorage from "@react-native-community/async-storage";
 import MusicFiles from "../../../vendor/react-native-get-music-files";
-import { screenDimensions } from "../../utils/global";
-import CommonStyles from "../../styles/common";
+
+import DataLoader from '../Loaders/DataLoader';
+
+import { Device } from '../../utils';
 
 import Song from "../../../assets/images/icons/song.png";
 import play from "../../../assets/images/icons/play.png";
 import pause from "../../../assets/images/icons/pause.png";
-import select from "../../../assets/images/icons/select.png";
 import use from "../../../assets/images/icons/use.png";
-
-import DataLoader from '../Loaders/DataLoader';
 
 const storeSongs = async (value) => {
   try {
@@ -278,7 +277,7 @@ class SongsList extends PureComponent {
 const styles = StyleSheet.create({
   songSelection: {
     height: 40,
-    width: screenDimensions.ScreenWidth - 50,
+    width: Device.ScreenWidth - 50,
     borderRadius: 90,
     marginTop: 15,
     paddingLeft: 25,

@@ -21,7 +21,7 @@ import {
 import Video, { FilterType } from "react-native-video";
 import LinearGradient from "react-native-linear-gradient";
 
-import { screenDimensions } from "../../../utils/global";
+import { Device } from '../../../utils';
 import Swiper from "../../../plugins/Swiper";
 
 import clapIcon from "../../../../assets/images/icons/clap.png";
@@ -30,8 +30,7 @@ import shareIcon from "../../../../assets/images/icons/share.png";
 import songIn from "../../../../assets/images/icons/song-in.png";
 import moreOptions from "../../../../assets/images/icons/more-options.png";
 
-const ScreenWidth = Dimensions.get("window").width;
-const ScreenHeight = Dimensions.get("window").height;
+import clip from '../../../../assets/clips/splash0.mp4';
 
 const TvTab = ({ navigation }) => {
   const [activeVideo, setActiveVideo] = useState(0);
@@ -68,7 +67,7 @@ const TvTab = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // fetchVideos();
+    fetchVideos();
     requestMultiple([
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
       PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
@@ -151,7 +150,7 @@ const TvTab = ({ navigation }) => {
                 </View>
 
                 <Video
-                  source={{ uri: item.src }}
+                  source={clip || { uri: item.src }}
                   muted={false}
                   repeat={true}
                   resizeMode={"cover"}
@@ -171,7 +170,7 @@ const TvTab = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: ScreenHeight,
+    height: Device.ScreenHeight,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -188,13 +187,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     top: 0,
-    width: ScreenWidth,
+    width: Device.ScreenWidth,
     paddingTop: 30,
     paddingBottom: 20,
   },
   wrLandingScreener: {
     position: "relative",
-    minHeight: screenDimensions.ScreenHeight,
+    minHeight: Device.ScreenHeight,
   },
   clip: {
     flex: 1,
@@ -205,8 +204,8 @@ const styles = StyleSheet.create({
     right: 0,
     position: "absolute",
     zIndex: 50,
-    height: screenDimensions.ScreenHeight,
-    width: screenDimensions.ScreenWidth,
+    height: Device.ScreenHeight,
+    width: Device.ScreenWidth,
   },
   videoWrapper: {
     flex: 1,
@@ -216,8 +215,8 @@ const styles = StyleSheet.create({
     right: 0,
     position: "absolute",
     zIndex: 100,
-    height: screenDimensions.ScreenHeight,
-    width: screenDimensions.ScreenWidth,
+    height: Device.ScreenHeight,
+    width: Device.ScreenWidth,
   },
   videoWrapperTouchable: {
     elevation: 1
@@ -228,7 +227,7 @@ const styles = StyleSheet.create({
     left: 0,
     height: 200,
     right: 0,
-    width: screenDimensions.ScreenWidth,
+    width: Device.ScreenWidth,
     elevation: 3,
     zIndex: 300,
   },
